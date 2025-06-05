@@ -27,7 +27,7 @@ from odoo.http import request
 
 class TableReservation(http.Controller):
     """ For reservation of tables """
-    @http.route(['/table_reservation'], type='http', auth='user', website=True)
+    @http.route(['/table_reservation'], type='http', auth='public', website=True)
     def table_reservation(self):
         """ For rendering table reservation template """
         pos_config = request.env['res.config.settings'].sudo().search([],
@@ -49,7 +49,7 @@ class TableReservation(http.Controller):
         minutes = int((hour_float - hours) * 60)
         return f"{hours:02d}:{minutes:02d}"
 
-    @http.route(['/restaurant/floors'], type='http', auth='user', website=True)
+    @http.route(['/restaurant/floors'], type='http', auth='public', website=True)
     def restaurant_floors(self, **kwargs):
         """ To get floor details """
         floors = request.env['restaurant.floor'].sudo().search([])
@@ -68,7 +68,7 @@ class TableReservation(http.Controller):
         return http.request.render(
             "table_reservation_on_website.restaurant_floors", vals)
 
-    @http.route(['/restaurant/floors/tables'], type='json', auth='user',
+    @http.route(['/restaurant/floors/tables'], type='json', auth='public',
                 website=True)
     def restaurant_floors_tables(self, **kwargs):
         """ To get non-reserved table details """
@@ -257,7 +257,7 @@ class TableReservation(http.Controller):
         else:
             raise ValidationError(_("Please select table."))
 
-    @http.route(['/table/reservation/pos'], type='json', auth='user',
+    @http.route(['/table/reservation/pos'], type='json', auth='public',
                 website=True)
     def table_reservation_pos(self, table_id):
         """ For pos table booking """
@@ -295,7 +295,7 @@ class TableReservation(http.Controller):
             })
         return
 
-    @http.route(['/active/floor/tables'], type='json', auth='user',
+    @http.route(['/active/floor/tables'], type='json', auth='public',
                 website=True)
     def active_floor_tables(self, floor_id):
         """ To get active floors """
