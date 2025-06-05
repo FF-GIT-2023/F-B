@@ -198,7 +198,7 @@ class TableReservation(http.Controller):
                         '<span style="font-size: 20px; font-weight: bold;">' + 'Table Reservation' + '</span>'
                          '</td>'
                          '<td valign="middle" align="right">'
-                         '<img src="/logo.png?company=" + self.company_id.id + style="padding: 0px; margin: 0px; height: auto; width: 80px;"/>'
+                         '<img src="/logo.png?company={request.env.company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;"/>'
                          '</td>'
                          '</tr>'
                          '<tr>''<td colspan="2" style="text-align:center;">'
