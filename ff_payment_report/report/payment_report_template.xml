@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_payment_template">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h2>Payment Report</h2>
+                    </div>
+
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <strong>Date Range:</strong>
+                        <span t-esc="start_date"/>
+                        -
+                        <span t-esc="end_date"/>
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px; border: 2px solid black;">
+                        <thead>
+                            <tr style="background-color: #f0f0f0;">
+                                <th style="padding: 8px; border: 2px solid black; text-align: center;">Reference</th>
+                                <th style="padding: 8px; border: 2px solid black; text-align: center;">Customer</th>
+                                <th style="padding: 8px; border: 2px solid black; text-align: center;">Payment Method
+                                </th>
+                                <th style="padding: 8px; border: 2px solid black; text-align: center;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="payments" t-as="payment">
+                                <tr>
+                                    <td style="padding: 8px; border: 2px solid black; text-align: center;">
+                                        <span t-esc="payment['reference']"/>
+                                    </td>
+                                    <td style="padding: 8px; border: 2px solid black; text-align: center;">
+                                        <span t-esc="payment['customer']"/>
+                                    </td>
+                                    <td style="padding: 8px; border: 2px solid black; text-align: center;">
+                                        <span t-esc="payment['payment_method']"/>
+                                    </td>
+                                    <td style="padding: 8px; border: 2px solid black; text-align: right;">
+                                        <span class="mr3 ml5" t-esc="currency_symbol"/>
+                                        <span t-raw="payment['amount']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <t t-if="payments">
+                                    <td colspan="3" style="padding: 8px; border: 1px solid black; text-align: right;">
+                                        <strong>Grand Total:</strong>
+                                    </td>
+                                    <td style="padding: 8px; border: 1px solid black; text-align: right;">
+                                        <span t-esc="currency_symbol"/>
+                                        <span t-esc="total_amount"/>
+                                    </td>
+                                </t>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Wizard Form View -->
+    <record id="view_payment_report_wiz_form" model="ir.ui.view">
+        <field name="name">payment.report.wiz.form</field>
+        <field name="model">payment.report.wiz</field>
+        <field name="arch" type="xml">
+            <form string="POS Payment Report Wizard">
+                <group>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="payment_method_id"/>
+                </group>
+                <footer>
+                    <button name="action_generate_report" type="object" string="Generate Report" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Window -->
+    <record id="action_payment_report_wiz" model="ir.actions.act_window">
+        <field name="name">Payment Report</field>
+        <field name="res_model">payment.report.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_payment_report_wiz_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem
+        id="menu_payment_report_wiz"
+        name="Payment Report"
+        action="action_payment_report_wiz"
+        parent="point_of_sale.menu_point_rep"
+        sequence="110"
+    />
+
+</odoo>
