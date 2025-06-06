@@ -8,6 +8,9 @@
             <tree>
                 <field name="sequence"/>
                 <field name="customer_id"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="no_of_persons"/>
                 <field name="date"/>
                 <field name="booked_tables_ids" widget="many2many_tags"/>
                 <field name="floor_id"/>
@@ -45,10 +48,15 @@
                     <group>
                         <group>
                             <field name="customer_id"/>
+                            <field name="phone"/>
+                            <field name="email"/>
                             <field name="date"/>
                             <field name="starting_at"/>
                             <field name="ending_at"/>
                             <field name="floor_id"/>
+                        </group>
+
+                        <group>
                             <field name="available_tables" invisible="1"/>
                             <field name="booked_tables_ids"
                                    widget="many2many_tags"/>
