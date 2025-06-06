@@ -38,6 +38,10 @@ class TableReservation(models.Model):
     customer_id = fields.Many2one(comodel_name="res.partner",
                                   string="Customer",
                                   help="Name of the customer")
+    email = fields.Char("Email-id", related="customer_id.email")
+    phone = fields.Char("Phone no", related="customer_id.phone")
+    no_of_persons = fields.Char("No.of Persons")
+
     floor_id = fields.Many2one(comodel_name='restaurant.floor',
                                string="Floor Plan",
                                help="Booked floor", required=True)

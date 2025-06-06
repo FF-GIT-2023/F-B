@@ -152,8 +152,9 @@ class TableReservation(http.Controller):
                     [('company_id', '=', company.id)], limit=1)
                 return request.redirect("/shop/cart")
             else:
-                reservation = request.env['table.reservation'].sudo().create({
-                    "customer_id": request.env.user.partner_id.id,
+                partner_ids = request.env["res.partner"].sudo()
+                partner = partner_ids.search([("email", "=", kwargs.get("email"))], limit=1)
+                table_reservation_vals = {
                     "booked_tables_ids": record_tables,
                     "floor_id": kwargs.get('floors'),
                     "date": kwargs.get('date'),
@@ -162,7 +163,28 @@ class TableReservation(http.Controller):
                     'booking_amount': 0,
                     'state': 'reserved',
                     'type': 'website',
-                })
+                }
+                if not partner:
+                    partner_id = partner_ids.create(
+                        {"name": kwargs.get("customer_name"),
+                         "email": kwargs.get("email"),
+                         "phone": kwargs.get("phone")}
+                    )
+                    table_reservation_vals.update({
+                        "customer_id": partner_id.id,
+                        "email": kwargs.get("email"),
+                        "phone": kwargs.get("phone"),
+                        "no_of_persons": kwargs.get("no_of_people")
+                    })
+                    reservation = request.env['table.reservation'].sudo().create(table_reservation_vals)
+                else:
+                    table_reservation_vals.update({
+                        "customer_id": partner.id,
+                        "email": kwargs.get("email"),
+                        "phone": kwargs.get("phone"),
+                        "no_of_persons": kwargs.get("no_of_people")
+                    })
+                    reservation = request.env['table.reservation'].sudo().create(table_reservation_vals)
 
                 string = (
                     f'The reservation amount for the selected table is {reservation.booking_amount}.'
@@ -246,7 +268,7 @@ class TableReservation(http.Controller):
 
                 request.env['mail.mail'].sudo().create({
                     'subject': "Table reservation",
-                    'email_to': request.env.user.login,
+                    'email_to': reservation.customer_id.email,
                     'recipient_ids': [request.env.user.partner_id.id],
                     'body_html': body_html,
                 }).send()

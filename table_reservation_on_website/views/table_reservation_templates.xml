@@ -124,7 +124,9 @@
                           enctype="multipart/form-data" class="oe_import">
                         <div class="row">
                             <div class="col-2 mt-4">
-                                <span><strong>Select Your Floor</strong></span>
+                                <span>
+                                    <strong>Select Your Floor</strong>
+                                </span>
                             </div>
                             <div class="col-2 mt-4" id="restaurant_floors">
                                 <select name="floors" id="floors_rest"
@@ -142,34 +144,31 @@
                         <br/>
                         <br/>
                         <div id="info" class="ml-2" style="display: none;margin-right:20px">
-                            <div id="tableContainer"
-                                 style="width:100%;display:flex;">
-                                <div class="row" id="table_container_row" style="margin-left:20px"/>
+                            <div id="tableContainer" style="width:100%;display:flex;">
+                                <div class="row" id="table_container_row" style="margin-left:20px;height:100px"/>
                                 <div class="card shadow-lg rounded-4"
-                                     style="background-color:#c8e0e0;width:1000px;height:370px;border:0;margin-left:20px">
+                                     style="background-color:#c8e0e0;width:400px;height:auto;border:0;margin-left:200px">
                                     <div class="card-body" style="border:1px;">
                                         <h5 class="card-title text-center"
-                                            style="Font-size:30px;">Booking Info
+                                            style="font-size:30px;">Booking Info
                                         </h5>
-                                        <table class="table table-bordered table-striped" style="border:1px solid #000;">
+                                        <table class="table table-bordered table-striped"
+                                               style="border:1px solid #000;">
                                             <tr>
                                                 <td>Date:</td>
-                                                <td style="text-align:right;"
-                                                    id="date_booking">
+                                                <td style="text-align:right;" id="date_booking">
                                                     <t t-esc="date"/>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Start Time:</td>
-                                                <td style="text-align:right;"
-                                                    id="booking_start">
+                                                <td style="text-align:right;" id="booking_start">
                                                     <t t-esc="start_time"/>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>End Time:</td>
-                                                <td style="text-align:right;"
-                                                    id="booking_end">
+                                                <td style="text-align:right;" id="booking_end">
                                                     <t t-esc="end_time"/>
                                                 </td>
                                             </tr>
@@ -178,9 +177,7 @@
                                                     <td>
                                                         <b>
                                                             Booking Amount For
-                                                            <span id="count_table">
-                                                                0
-                                                            </span>
+                                                            <span id="count_table">0</span>
                                                             Tables
                                                         </b>
                                                     </td>
@@ -194,9 +191,7 @@
                                                     <td>
                                                         <b>
                                                             Booking Amount For
-                                                            <span id="count_table">
-                                                                0
-                                                            </span>
+                                                            <span id="count_table">0</span>
                                                             Tables
                                                         </b>
                                                     </td>
@@ -206,38 +201,58 @@
                                                 </tr>
                                             </t>
                                         </table>
+
+                                        <!-- NEW: Customer Info Fields -->
+                                        <div class="form-group row mt-4">
+                                            <label class="col-sm-4 col-form-label" for="name">Name:</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" name="customer_name" id="name"
+                                                       required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mt-3">
+                                            <label class="col-sm-4 col-form-label" for="phone">Phone:</label>
+                                            <div class="col-sm-8">
+                                                <input type="tel" class="form-control" name="phone" id="phone"
+                                                       required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mt-3">
+                                            <label class="col-sm-4 col-form-label" for="email">Email:</label>
+                                            <div class="col-sm-8">
+                                                <input type="email" class="form-control" name="email" id="email"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mt-3">
+                                            <label class="col-sm-4 col-form-label" for="people">No. of People:</label>
+                                            <div class="col-sm-8">
+                                                <input type="number" class="form-control" name="no_of_people"
+                                                       id="people" min="1" required="required"/>
+                                            </div>
+                                        </div>
+                                        <!-- END Customer Info -->
+
+                                        <!-- Hidden Inputs -->
                                         <span hidden="hidden">
-                                            <input name="date" id="date_id"
-                                                   class="form-control border-0 p-0"
+                                            <input name="date" id="date_id" class="form-control border-0 p-0"
                                                    type="text"
-                                                   data-allow-hotkeys="true"
-                                                   t-att-value="date"
-                                                   t-ref="autofocus"/>
-                                            <input name="start_time"
-                                                   id="start_id"
-                                                   class="form-control border-0 p-0"
+                                                   data-allow-hotkeys="true" t-att-value="date" t-ref="autofocus"/>
+                                            <input name="start_time" id="start_id" class="form-control border-0 p-0"
                                                    type="text"
-                                                   data-allow-hotkeys="true"
-                                                   t-att-value="start_time"
+                                                   data-allow-hotkeys="true" t-att-value="start_time"
                                                    t-ref="autofocus"/>
-                                            <input name="end_time"
-                                                   class="form-control border-0 p-0"
+                                            <input name="end_time" class="form-control border-0 p-0" type="text"
+                                                   data-allow-hotkeys="true" t-att-value="end_time" t-ref="autofocus"/>
+                                            <input name="tables" id="tables_input" class="form-control border-0 p-0"
                                                    type="text"
-                                                   data-allow-hotkeys="true"
-                                                   t-att-value="end_time"
-                                                   t-ref="autofocus"/>
-                                            <input name="tables"
-                                                   id="tables_input"
-                                                   class="form-control border-0 p-0"
-                                                   type="text"
-                                                   data-allow-hotkeys="true"
-                                                   t-ref="autofocus"/>
+                                                   data-allow-hotkeys="true" t-ref="autofocus"/>
                                         </span>
+
+                                        <!-- Submit Button -->
                                         <div class="text-center" style="margin-top:40px">
                                             <button type="submit" disabled="True"
                                                     class="btn btn-primary submit_button">
-                                                Booking
-                                                Confirm
+                                                Confirm Booking
                                             </button>
                                         </div>
                                     </div>
