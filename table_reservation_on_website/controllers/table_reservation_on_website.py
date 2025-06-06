@@ -124,8 +124,7 @@ class TableReservation(http.Controller):
                 "table_reservation_on_website.reservation_charge")
             if payment:
                 table = request.env.ref(
-                    'table_reservation_on_website'
-                    '.product_product_table_booking').sudo()
+                    'table_reservation_on_website.product_product_table_booking').sudo()
                 table.write({
                     'list_price': sum(amount)
                 })
@@ -143,12 +142,8 @@ class TableReservation(http.Controller):
                     'booking_amount': sum(amount),
                     'order_line': [
                         (0, 0, {
-                            'name': request.env.ref(
-                                'table_reservation_on_website'
-                                '.product_product_table_booking').name,
-                            'product_id': request.env.ref(
-                                'table_reservation_on_website'
-                                '.product_product_table_booking').id,
+                            'name': table.name,
+                            'product_id': table.id,
                             'product_uom_qty': 1,
                             'price_unit': sum(amount),
                         })],
@@ -168,92 +163,95 @@ class TableReservation(http.Controller):
                     'state': 'reserved',
                     'type': 'website',
                 })
-                string = f'The reservation amount for the selected table is {reservation.booking_amount}.' if reservation.booking_amount > 0 else ''
+
+                string = (
+                    f'The reservation amount for the selected table is {reservation.booking_amount}.'
+                    if reservation.booking_amount > 0 else ''
+                )
                 list_of_tables = record_tables.mapped('name')
                 if len(list_of_tables) > 1:
-                    tables_sentence = ', '.join(
-                        list_of_tables[:-1]) + ', and ' + list_of_tables[-1]
+                    tables_sentence = ', '.join(list_of_tables[:-1]) + ', and ' + list_of_tables[-1]
                 else:
                     tables_sentence = list_of_tables[0]
-                final_sentence = string + " You have reserved " + tables_sentence + "."
+                final_sentence = string + f" You have reserved {tables_sentence}."
+
+                floor = request.env['restaurant.floor'].sudo().browse(int(kwargs.get('floors')))
+                company = request.env.company
+
+                body_html = f"""
+                <table border=0 cellpadding=0 cellspacing=0 style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align=center>
+                <table border=0 cellpadding=0 cellspacing=0 width=590 style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                <tbody>
+                <!-- HEADER -->
+                <tr>
+                <td align=center style="min-width: 590px;">
+                <table border=0 cellpadding=0 cellspacing=0 width=590 style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr>
+                <td valign=middle>
+                <span style="font-size: 10px;">{reservation.sequence}</span><br/>
+                <span style="font-size: 20px; font-weight: bold;">Table Reservation</span>
+                </td>
+                <td valign="middle" align="right">
+                <img src="/logo.png?company={company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;"/>
+                </td>
+                </tr>
+                <tr><td colspan="2" style="text-align:center;">
+                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+                </table>
+                </td>
+                </tr>
+                <!-- CONTENT -->
+                <tr>
+                <td align="center" style="min-width: 590px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr>
+                <td valign="top" style="font-size: 13px;">
+                <div>
+                Dear {request.env.user.name},<br/><br/>
+                Your table booking at {floor.name} has been confirmed on {reservation.date} for {reservation.starting_at} to {reservation.ending_at}. {final_sentence}
+                <br/><br/>
+                Best regards<br/>
+                </div>
+                </td>
+                </tr>
+                <tr>
+                <td style="text-align:center;">
+                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td>
+                </tr>
+                </table>
+                </td>
+                </tr>
+                <!-- FOOTER -->
+                <tr>
+                <td align="center" style="min-width: 590px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr>
+                <td valign="middle" align="left">
+                {company.name}<br/>
+                {company.phone or ''}
+                </td>
+                <td valign="middle" align="right">
+                <a href="mailto:{company.email}" style="text-decoration:none; color: #5e6061;">{company.email}</a><br/>
+                <a href="{company.website}" style="text-decoration:none; color: #5e6061;">{company.website}</a>
+                </td>
+                </tr>
+                </table>
+                </td>
+                </tr>
+                </tbody>
+                </table>
+                """
+
                 request.env['mail.mail'].sudo().create({
                     'subject': "Table reservation",
                     'email_to': request.env.user.login,
                     'recipient_ids': [request.env.user.partner_id.id],
-                    'body_html':
-                        '<table border=0 cellpadding=0 cellspacing=0 '
-                        'style="padding-top: 16px; background-color: '
-                        '#F1F1F1; font-family:Verdana, Arial,sans-serif; '
-                        'color: #454748; width: 100%; '
-                        'border-collapse:separate;"><tr><td align=center>'
-                        '<table border=0 cellpadding=0 cellspacing=0 width=590 style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">'
-                        '<tbody>'
-                        '<!-- HEADER -->'
-                        '<tr>'
-                        '<td align=center style="min-width: 590px;">'
-                        '<table border=0 cellpadding=0 cellspacing=0 width=590 style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">'
-                        '<tr>'
-                        '<td valign=middle>'
-                        '<span style="font-size: 10px;">'+reservation.sequence+'</span><br/>'
-                        '<span style="font-size: 20px; font-weight: bold;">' + 'Table Reservation' + '</span>'
-                         '</td>'
-                         '<td valign="middle" align="right">'
-                         '<img src="/logo.png?company={request.env.company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;"/>'
-                         '</td>'
-                         '</tr>'
-                         '<tr>''<td colspan="2" style="text-align:center;">'
-                         '<hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>'
-                         '</td>''</tr>'
-                         '</table>'
-                         '</td>'
-                         '</tr>'
-                         '<!-- CONTENT -->'
-                         '<tr>'
-                         '<td align="center" style="min-width: 590px;">'
-                         '<table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">'
-                         '<tr>'
-                         '<td valign="top" style="font-size: 13px;">'
-                         '<div>'
-                         'Dear' + ' ' + request.env.user.name + ',' '<br/>''<br/>'
-                         'Your table booking at ' + request.env['restaurant.floor'].sudo().browse(int(kwargs.get('floors'))).name + ' ' + 'has been confirmed on '+str(reservation.date)+' for '+reservation.starting_at+' to '+reservation.ending_at + '.' + final_sentence +
-                        '<br/>''<br/>'
-                        '</span>'
-                        '</div>'
-                        '<br/>'
-                        'Best regards''<br/>'
-                        '</div>'
-                        '</td>'
-                        '</tr>'
-                        '<tr>'
-                        '<td style="text-align:center;">'
-                        '<hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>'
-                        '</td>'
-                        '</tr>'
-                        '</table>'
-                        '</td>'
-                        '</tr>'
-                        '<!-- FOOTER -->'
-                        '<tr>'
-                        '<td align="center" style="min-width: 590px;">'
-                        '<table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">'
-                        '<tr>'
-                        '<td valign="middle" align="left">'
-                        + request.env.company.name +
-                        '<br/>'
-                        + request.env.company.phone +
-                        '</td>'
-                        '<td valign="middle" align="right">'
-                        '<t t-if="%s" % +self.env.company_id.email>'
-                        '<a href="mailto:%s % +request.env.company_id.email+" style="text-decoration:none; color: #5e6061;">'
-                        + request.env.company.email +
-                        '</a>'
-                        '</t>'
-                        '<br/>'
-                        '<t t-if="%s % +self.env.company.website+ ">'
-                        '</table>'
+                    'body_html': body_html,
                 }).send()
-            return request.render(
-                "table_reservation_on_website.table_reserved_template")
+
+            return request.render("table_reservation_on_website.table_reserved_template")
         else:
             raise ValidationError(_("Please select table."))
 
