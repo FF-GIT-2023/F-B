@@ -273,7 +273,7 @@ class TableReservation(http.Controller):
                     'body_html': body_html,
                 }).send()
 
-            return request.render("table_reservation_on_website.table_reserved_template")
+            return request.redirect("/contactus-thank-you")
         else:
             raise ValidationError(_("Please select table."))
 
