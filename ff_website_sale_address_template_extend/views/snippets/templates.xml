@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="address_template_inherit" inherit_id="website_sale.address">
+        <xpath expr="//t[2]/div[@id='wrap']/div/div[2]/div/div/form/div/t[4]/div" position="replace">
+            <div t-attf-class="#{error.get('zip') and 'o_has_error'} div_zip col-md-4 mb-2">
+                <label class="col-form-label label-optional" for="zip">Postal Code</label>
+                <input type="text" name="zip" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}"
+                       t-att-value="'zip' in checkout and checkout['zip']"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>
