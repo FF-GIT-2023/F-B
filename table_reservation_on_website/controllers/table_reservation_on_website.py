@@ -68,6 +68,29 @@ class TableReservation(http.Controller):
         return http.request.render(
             "table_reservation_on_website.restaurant_floors", vals)
 
+    @http.route(['/restaurant/check_table_availability'], type='json', auth='public', website=True)
+    def check_table_availability(self, floor_id, date, start_time, end_time):
+        floor_id = int(floor_id)
+
+        tables = request.env['restaurant.table'].sudo().search([("floor_id", "=", floor_id)])
+
+        booked = request.env['table.reservation'].sudo().search([
+            ("date", "=", date),
+            ("starting_at", "<", end_time),
+            ("ending_at", ">", start_time),
+        ]).mapped("booked_tables_ids")
+
+        available_tables = tables.filtered(lambda t: t.id not in booked.ids)
+        available_table_ids = available_tables.ids
+        available_seats_count = sum(available_tables.mapped("seats"))
+
+        return {
+            "available_table_ids": available_table_ids,
+            "total_tables": len(tables),
+            "available_seats_count": available_seats_count,
+        }
+
+
     @http.route(['/restaurant/floors/tables'], type='json', auth='public',
                 website=True)
     def restaurant_floors_tables(self, **kwargs):

@@ -117,21 +117,17 @@
     <template id="restaurant_floors" name="Admission Submit">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure oe_empty">
-                <div class="container swa_container card shadow-lg rounded-4 mt-4">
-                    <br/>
-                    <br/>
-                    <form action="/booking/confirm" method="POST"
-                          enctype="multipart/form-data" class="oe_import">
-                        <div class="row">
-                            <div class="col-2 mt-4">
-                                <span>
-                                    <strong>Select Your Floor</strong>
-                                </span>
+                <div class="container swa_container card shadow-lg rounded-4 my-3 my-md-4">
+                    <form action="/booking/confirm" method="POST" enctype="multipart/form-data" class="oe_import">
+                        <div class="row align-items-center py-2 py-md-3 g-2">
+                            <div class="col-12 col-md-3 col-lg-2">
+                                <label class="font-weight-bold mb-0">Select Floor</label>
                             </div>
-                            <div class="col-2 mt-4" id="restaurant_floors">
-                                <select name="floors" id="floors_rest"
-                                        class="form-control">
-                                    <option value="0">Select a Floor</option>
+                            <div class="col-12 col-md-5 col-lg-4">
+                                <select name="floors" id="floors_rest" class="form-select form-select-sm">
+                                    <option value="0">
+                                        <b>Select a Floor</b>
+                                    </option>
                                     <t t-foreach="floors" t-as="floor">
                                         <option t-att-value="floor.id">
                                             <t t-esc="floor.name"/>
@@ -140,134 +136,127 @@
                                 </select>
                             </div>
                         </div>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <div id="info" class="ml-2" style="display: none;margin-right:20px">
-                            <div id="tableContainer" style="width:100%;display:flex;">
-                                <div class="row" id="table_container_row" style="margin-left:20px;height:100px"/>
-                                <div class="card shadow-lg rounded-4"
-                                     style="background-color:#c8e0e0;width:600px;height:auto;border:0;margin-left:200px">
-                                    <div class="card-body" style="border:1px;">
-                                        <h5 class="card-title text-center"
-                                            style="font-size:30px;">Booking Info
+
+                        <div id="info" class="mx-0 mx-md-1 my-3" style="display:none;">
+                            <div id="tableContainer" class="w-100 d-flex flex-column">
+
+                                <div class="row g-2 mx-0" id="table_container_row" style="min-height:80px"/>
+                                <div id="check_tables" class="alert alert-danger text-center w-100 mt-2 py-2"
+                                     style="display:none;">
+                                    <h3 class="h6 m-0">All tables are booked for the selected time slot.</h3>
+                                </div>
+
+                                <div id="booking_info" class="card shadow-sm rounded-3 w-100 my-2"
+                                     style="display:none;background-color:#c8e0e0;border:0;">
+                                    <div class="card-body p-2 p-md-3">
+                                        <h5 class="card-title text-center mb-2 fs-5">
+                                            <b>Booking Info</b>
                                         </h5>
-                                        <table class="table table-bordered table-striped"
-                                               style="border:1px solid #000;">
-                                            <tr>
-                                                <td>Date:</td>
-                                                <td style="text-align:right;" id="date_booking">
-                                                    <t t-esc="date"/>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Start Time:</td>
-                                                <td style="text-align:right;" id="booking_start">
-                                                    <t t-esc="start_time"/>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>End Time:</td>
-                                                <td style="text-align:right;" id="booking_end">
-                                                    <t t-esc="end_time"/>
-                                                </td>
-                                            </tr>
-                                            <t t-if="payment == 'True'">
-                                                <tr>
-                                                    <td>
-                                                        <b>
-                                                            Booking Amount For
-                                                            <span id="count_table">0</span>
-                                                            Tables
-                                                        </b>
-                                                    </td>
-                                                    <td style="text-align:right;">
-                                                        <span id="total_amount"/>
-                                                    </td>
-                                                </tr>
-                                            </t>
-                                            <t t-else="">
-                                                <tr style="display:none;">
-                                                    <td>
-                                                        <b>
-                                                            Booking Amount For
-                                                            <span id="count_table">0</span>
-                                                            Tables
-                                                        </b>
-                                                    </td>
-                                                    <td style="text-align:right;">
-                                                        <span id="total_amount"/>
-                                                    </td>
-                                                </tr>
-                                            </t>
-                                        </table>
 
-                                        <!-- NEW: Customer Info Fields -->
-                                        <div class="form-group row mt-4">
-                                            <label class="col-sm-4 col-form-label" for="name">Name:</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="customer_name" id="name"
-                                                       required="required"/>
-                                            </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-bordered m-0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="fw-medium py-1 px-2">Date:</td>
+                                                        <td class="text-end py-1 px-2" id="date_booking">
+                                                            <t t-esc="date"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-medium py-1 px-2">Start Time:</td>
+                                                        <td class="text-end py-1 px-2" id="booking_start">
+                                                            <t t-esc="start_time"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-medium py-1 px-2">End Time:</td>
+                                                        <td class="text-end py-1 px-2" id="booking_end">
+                                                            <t t-esc="end_time"/>
+                                                        </td>
+                                                    </tr>
+                                                    <t t-if="payment == 'True'">
+                                                        <tr>
+                                                            <td class="fw-medium py-1 px-2">
+                                                                Booking Amount For
+                                                                <span id="count_table">0</span>
+                                                                Tables
+                                                            </td>
+                                                            <td class="text-end fw-bold py-1 px-2">
+                                                                <span id="total_amount"/>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
                                         </div>
-                                        <div class="form-group row mt-3">
-                                            <label class="col-sm-4 col-form-label" for="phone">Phone:</label>
-                                            <div class="col-sm-8">
-                                                <input type="tel" class="form-control" name="phone" id="phone"
-                                                       required="required"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mt-3">
-                                            <label class="col-sm-4 col-form-label" for="email">Email:</label>
-                                            <div class="col-sm-8">
-                                                <input type="email" class="form-control" name="email" id="email"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mt-3">
-                                            <label class="col-sm-4 col-form-label" for="people">No. of People:</label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="no_of_people"
-                                                       id="people" min="1" required="required"/>
-                                            </div>
-                                        </div>
-                                        <!-- END Customer Info -->
 
-                                        <!-- Hidden Inputs -->
-                                        <span hidden="hidden">
-                                            <input name="date" id="date_id" class="form-control border-0 p-0"
-                                                   type="text"
-                                                   data-allow-hotkeys="true" t-att-value="date" t-ref="autofocus"/>
-                                            <input name="start_time" id="start_id" class="form-control border-0 p-0"
-                                                   type="text"
-                                                   data-allow-hotkeys="true" t-att-value="start_time"
-                                                   t-ref="autofocus"/>
-                                            <input name="end_time" class="form-control border-0 p-0" type="text"
-                                                   data-allow-hotkeys="true" t-att-value="end_time" t-ref="autofocus"/>
-                                            <input name="tables" id="tables_input" class="form-control border-0 p-0"
-                                                   type="text"
-                                                   data-allow-hotkeys="true" t-ref="autofocus"/>
-                                        </span>
+                                        <div class="mt-3">
+                                            <div class="row g-2">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group mb-2">
+                                                        <label for="name" class="form-label small fw-medium">Name:
+                                                        </label>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                               name="customer_name" id="name" required="1"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group mb-2">
+                                                        <label for="phone" class="form-label small fw-medium">Phone:
+                                                        </label>
+                                                        <input type="tel" class="form-control form-control-sm"
+                                                               name="phone" id="phone" required="1"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group mb-2">
+                                                        <label for="email" class="form-label small fw-medium">Email:
+                                                        </label>
+                                                        <input type="email" class="form-control form-control-sm"
+                                                               name="email" id="email"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group mb-2">
+                                                        <label for="people" class="form-label small fw-medium">No. of
+                                                            People:
+                                                        </label>
+                                                        <input type="number" class="form-control form-control-sm"
+                                                               name="no_of_people" id="people" min="1" required="1"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                        <!-- Submit Button -->
-                                        <div class="text-center" style="margin-top:40px">
-                                            <button type="submit" disabled="True"
-                                                    class="btn btn-primary submit_button">
+                                        <div class="d-none">
+                                            <input name="date" id="date_id" type="text" t-att-value="date"/>
+                                            <input name="start_time" id="start_id" type="text"
+                                                   t-att-value="start_time"/>
+                                            <input name="end_time" id="end_id" type="text" t-att-value="end_time"/>
+                                            <input name="tables" id="tables_input" type="text"/>
+                                        </div>
+
+                                        <div class="text-center mt-3">
+                                            <button id="table_confirm" type="submit" disabled="true"
+                                                    class="btn btn-primary btn-sm submit_button px-3 py-1 w-100 w-md-auto">
                                                 Confirm Booking
                                             </button>
                                         </div>
                                     </div>
+
                                     <div style="line-height:1px;background: #ffffff;border:0;"/>
                                     <t t-if="payment">
-                                        <div style="background: #ffffff;border:0;color:#FF0000;">
+                                        <div class="p-1 text-center small"
+                                             style="background: #ffffff;border:0;color:#FF0000;">
                                             <t t-esc="refund"/>
                                         </div>
                                     </t>
                                 </div>
                             </div>
                         </div>
-                        <br/>
                     </form>
                 </div>
+
             </div>
         </t>
     </template>

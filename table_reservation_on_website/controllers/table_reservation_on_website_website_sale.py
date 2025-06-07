@@ -46,13 +46,14 @@ class WebsiteSalePayment(WebsiteSale):
             raise ValidationError(f"{first_error[0]}\n{first_error[1]}")
 
         tx_sudo = order.get_portal_last_transaction() if order else order.env['payment.transaction']
-
         if order.tables_ids:
             reservation = request.env['table.reservation'].sudo().create({
-                "customer_id": request.env.user.partner_id.id,
+                "customer_id": order.partner_id.id,
                 "booked_tables_ids": order.tables_ids,
                 "floor_id": order.floors,
                 "date": order.date,
+                "email": order.partner_id.email,
+                "phone": order.partner_id.phone,
                 "starting_at": order.starting_at,
                 "ending_at": order.ending_at,
                 'booking_amount': order.booking_amount,
@@ -94,7 +95,7 @@ class WebsiteSalePayment(WebsiteSale):
                                     </table>
                                 </td>
                             </tr>
-    
+
                             <!-- CONTENT -->
                             <tr>
                                 <td align="center" style="min-width: 590px;">
@@ -115,7 +116,7 @@ class WebsiteSalePayment(WebsiteSale):
                                     </table>
                                 </td>
                             </tr>
-    
+
                             <!-- FOOTER -->
                             <tr>
                                 <td align="center">
@@ -141,7 +142,7 @@ class WebsiteSalePayment(WebsiteSale):
 
             request.env['mail.mail'].sudo().create({
                 'subject': "Table reservation",
-                'email_to': request.env.user.login,
+                'email_to': reservation.customer_id.email,
                 'recipient_ids': [request.env.user.partner_id.id],
                 'body_html': body_html,
             }).send()
