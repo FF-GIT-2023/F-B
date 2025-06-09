@@ -10,7 +10,7 @@ publicWidget.registry.reservation = publicWidget.Widget.extend({
         'change #end_time': '_onChangeTime',
         'click .close_btn_alert_modal': '_onClickCloseBtn',
         'click .close_btn_time_alert_modal': '_onClickCloseAlertBtn',
-        'change #floors_rest': '_onChangeFloor',
+        'change .select_floor': '_onChangeFloor',
     },
     async start() {
         this.openingHour = null;

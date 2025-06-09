@@ -26,28 +26,47 @@ from odoo.http import request
 
 
 class TableReservation(http.Controller):
-    """ For reservation of tables """
+
     @http.route(['/table_reservation'], type='http', auth='public', website=True)
     def table_reservation(self):
-        """ For rendering table reservation template """
-        pos_config = request.env['res.config.settings'].sudo().search([],
-                                                                      limit=1)
+        pos_config = request.env['res.config.settings'].sudo().search([], limit=1)
+
         try:
             opening_hour = self.float_to_time(float(pos_config.pos_opening_hour))
             closing_hour = self.float_to_time(float(pos_config.pos_closing_hour))
+            interval_difference_hours = float(pos_config.interval_hours)
+            print("interval_difference_hours", interval_difference_hours)
         except ValueError:
             opening_hour = "00:00"
             closing_hour = "23:59"
 
+        time_slots = self.generate_time_slots(opening_hour, closing_hour, interval_difference_hours)
+
         return http.request.render(
-            "table_reservation_on_website.table_reservation", {'opening_hour': opening_hour,
-            'closing_hour': closing_hour})
+            "table_reservation_on_website.table_reservation", {
+                'opening_hour': opening_hour,
+                'closing_hour': closing_hour,
+                'time_slots': time_slots
+            })
 
     def float_to_time(self, hour_float):
-        """ Convert float hours (e.g., 8.5 → 08:30) to HH:MM format """
         hours = int(hour_float)
         minutes = int((hour_float - hours) * 60)
         return f"{hours:02d}:{minutes:02d}"
+
+    def generate_time_slots(self, opening, closing, interval_difference_hours):
+        print("In to the generate_time_slots()")
+        time_format = "%H:%M"
+        slots = []
+        start_time = datetime.strptime(opening, time_format)
+        end_time = datetime.strptime(closing, time_format)
+
+        while start_time + timedelta(hours=interval_difference_hours) <= end_time:
+            slot_start = start_time.strftime(time_format)
+            slot_end = (start_time + timedelta(hours=interval_difference_hours)).strftime(time_format)
+            slots.append(f"{slot_start} - {slot_end}")
+            start_time += timedelta(hours=interval_difference_hours)
+        return slots
 
     @http.route(['/restaurant/floors'], type='http', auth='public', website=True)
     def restaurant_floors(self, **kwargs):
@@ -57,11 +76,16 @@ class TableReservation(http.Controller):
             "table_reservation_on_website.reservation_charge")
         refund = request.env['ir.config_parameter'].sudo().get_param(
             'table_reservation_on_website.refund')
+
+        time_slot = kwargs.get('time_slot')
+        start_time = end_time = None
+        if time_slot and " - " in time_slot:
+            start_time, end_time = [t.strip() for t in time_slot.split(" - ")]
         vals = {
             'floors': floors,
             'date': kwargs.get('date'),
-            'start_time': kwargs.get('start_time'),
-            'end_time': kwargs.get('end_time'),
+            'start_time': start_time,
+            'end_time': end_time,
             'payment': payment,
             'refund': refund,
         }
@@ -83,7 +107,6 @@ class TableReservation(http.Controller):
         available_tables = tables.filtered(lambda t: t.id not in booked.ids)
         available_table_ids = available_tables.ids
         available_seats_count = sum(available_tables.mapped("seats"))
-
         return {
             "available_table_ids": available_table_ids,
             "total_tables": len(tables),
