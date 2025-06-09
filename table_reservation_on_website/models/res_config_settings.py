@@ -58,6 +58,18 @@ class ResConfigSettings(models.TransientModel):
         help="Restaurant closing hour in 24-hour format."
     )
 
+    pos_interval_hours_bool = fields.Boolean(
+        related="pos_config_id.interval_hours_bool",
+        readonly=False,
+        help="Set difference for time slots restaurant table reservation"
+    )
+
+    interval_hours = fields.Float(
+        related="pos_config_id.interval_hours",
+        string="Table Reservation Interval (Hours)",
+        readonly=False
+    )
+
     def set_values(self):
         """ To set the value for fields in config setting """
         res = super(ResConfigSettings, self).set_values()

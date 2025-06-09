@@ -51,6 +51,11 @@ class PosConfig(models.Model):
         compute="_compute_closing_hour",
         store=True
     )
+    interval_hours_bool = fields.Boolean("Time Slot Hour",
+                                         help="Set difference for time slots restaurant table reservation")
+    interval_hours = fields.Float(
+        string="Table Reservation Interval (Hours)",
+        store=True)
 
     def _compute_opening_hour(self):
         """ Fetch opening hour from system parameters """
