@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_product_template_form_inherit_sale_popup" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.sale.popup</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <div name="sale_order_popup_hook"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
