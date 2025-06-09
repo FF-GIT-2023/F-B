@@ -13,6 +13,8 @@ publicWidget.registry.table_reservation = publicWidget.Widget.extend({
         var floors = this.$el.find("#floors_rest")[0].value;
         var date = this.$el.find("#date_booking").text().trim()
         var start = this.$el.find("#booking_start").text()
+        const startTime = this.$('#start_id').val();
+        const endTime = this.$('#end_id').val();
         if (document.getElementById('count_table')){
             document.getElementById('count_table').innerText = 0;
         }
@@ -21,9 +23,12 @@ publicWidget.registry.table_reservation = publicWidget.Widget.extend({
         }
         var self = this
         if (floors && date && start) {
-            jsonrpc("/restaurant/floors/tables", {'floors_id' : floors,
-            'date': date, 'start':start,})
-            .then(function (data) {
+            jsonrpc("/restaurant/floors/tables",
+                {'floors_id' : floors,
+                 'date': date,
+                 'start': startTime,
+                 'end': endTime
+            }).then(function (data) {
                 if(floors == 0){
                     self.$el.find('#table_container_row').empty();
                     self.$el.find('#info').hide();
