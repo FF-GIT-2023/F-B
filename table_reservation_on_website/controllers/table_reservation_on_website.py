@@ -35,7 +35,6 @@ class TableReservation(http.Controller):
             opening_hour = self.float_to_time(float(pos_config.pos_opening_hour))
             closing_hour = self.float_to_time(float(pos_config.pos_closing_hour))
             interval_difference_hours = float(pos_config.interval_hours)
-            print("interval_difference_hours", interval_difference_hours)
         except ValueError:
             opening_hour = "00:00"
             closing_hour = "23:59"
@@ -55,7 +54,6 @@ class TableReservation(http.Controller):
         return f"{hours:02d}:{minutes:02d}"
 
     def generate_time_slots(self, opening, closing, interval_difference_hours):
-        print("In to the generate_time_slots()")
         time_format = "%H:%M"
         slots = []
         start_time = datetime.strptime(opening, time_format)
@@ -119,6 +117,8 @@ class TableReservation(http.Controller):
     def restaurant_floors_tables(self, **kwargs):
         """ To get non-reserved table details """
         table_inbetween = []
+        start_time = kwargs.get("start")
+        end_time = kwargs.get("end")
         payment = request.env['ir.config_parameter'].sudo().get_param(
             "table_reservation_on_website.reservation_charge")
         tables = request.env['restaurant.table'].sudo().search(
@@ -127,8 +127,10 @@ class TableReservation(http.Controller):
             [('floor_id', '=', int(kwargs.get('floors_id'))), (
                 'date', '=', datetime.strptime(kwargs.get('date'),
                                                "%Y-%m-%d")), (
-                'state', '=', 'reserved')])
-        start_time_new = datetime.strptime(kwargs.get("start").strip(),
+                'state', '=', 'reserved'),("starting_at", "<", end_time),
+            ("ending_at", ">", start_time)])
+
+        start_time_new = datetime.strptime(start_time.strip(),
                                            "%H:%M").time()
         for rec in reserved:
             start_time = datetime.strptime(rec.starting_at, "%H:%M")

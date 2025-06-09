@@ -58,8 +58,7 @@ publicWidget.registry.reservation = publicWidget.Widget.extend({
                 start_time: startTime,
                 end_time: endTime,
             });
-            console.log("result", result)
-            if (result.available_table_ids.length === 0) {
+            if (result.total_tables === 0) {
                 this.$el.find("#check_tables").show();
                 this.$el.find("#booking_info").hide();
             }else {
