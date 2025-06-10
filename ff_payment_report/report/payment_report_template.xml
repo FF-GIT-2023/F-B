@@ -26,27 +26,27 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="payments" t-as="payment">
+                            <t t-foreach="orders" t-as="order">
                                 <tr>
                                     <td style="padding: 8px; border: 2px solid black; text-align: center;">
-                                        <span t-esc="payment['reference']"/>
+                                        <span t-esc="order['reference']"/>
                                     </td>
                                     <td style="padding: 8px; border: 2px solid black; text-align: center;">
-                                        <span t-esc="payment['customer']"/>
+                                        <span t-esc="order['customer']"/>
                                     </td>
                                     <td style="padding: 8px; border: 2px solid black; text-align: center;">
-                                        <span t-esc="payment['payment_method']"/>
+                                        <span t-esc="order['payment_method']"/>
                                     </td>
                                     <td style="padding: 8px; border: 2px solid black; text-align: right;">
                                         <span class="mr3 ml5" t-esc="currency_symbol"/>
-                                        <span t-raw="payment['amount']"/>
+                                        <span t-raw="order['amount']"/>
                                     </td>
                                 </tr>
                             </t>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <t t-if="payments">
+                                <t t-if="orders">
                                     <td colspan="3" style="padding: 8px; border: 1px solid black; text-align: right;">
                                         <strong>Grand Total:</strong>
                                     </td>
