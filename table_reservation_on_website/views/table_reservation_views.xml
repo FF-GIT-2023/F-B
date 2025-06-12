@@ -17,6 +17,10 @@
                 <field name="starting_at"/>
                 <field name="ending_at"/>
                 <field name="type"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'cancel'"
+                />
             </tree>
         </field>
     </record>
@@ -30,7 +34,7 @@
                     <button name="action_reserved" string="Reserve"
                             invisible="state != 'draft'" type="object"
                             class="oe_highlight"/>
-                    <button name="action_done" string="Done"
+                    <button name="action_done" string="Accept"
                             invisible="state != 'reserved'" type="object"
                             class="oe_highlight"/>
                     <button name="action_cancel" string="cancel"
@@ -67,6 +71,10 @@
                         </group>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>

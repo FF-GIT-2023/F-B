@@ -32,6 +32,7 @@ class TableReservation(models.Model):
     _name = "table.reservation"
     _description = 'Table Reservation'
     _rec_name = 'sequence'
+    _inherit = ["mail.thread"]
 
     sequence = fields.Char(string='Sequence', default=_('New'), readonly=True,
                            copy=False, help="Sequence number for records")
@@ -41,6 +42,8 @@ class TableReservation(models.Model):
     email = fields.Char("Email-id", related="customer_id.email")
     phone = fields.Char("Phone no", related="customer_id.phone")
     no_of_persons = fields.Char("No.of Persons")
+    company_id = fields.Many2one('res.company', string='Company',
+                                 index=True, default=lambda self: self.env.company)
 
     floor_id = fields.Many2one(comodel_name='restaurant.floor',
                                string="Floor Plan",
@@ -162,6 +165,27 @@ class TableReservation(models.Model):
         self.write({
             'state': 'cancel'
         })
+        template = self.env.ref("table_reservation_on_website.table_reservation_cancellation_mail_template")
+        compose_form = self.env.ref("mail.email_compose_message_wizard_form")
+        ctx = dict(
+            default_model="table.reservation",
+            default_res_ids=self.ids,
+            default_use_template=bool(template),
+            default_template_id=template.id,
+            default_composition_mode="comment",
+            default_email_to=self.email,
+        )
+
+        return {
+            "name": template.name,
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "mail.compose.message",
+            "views": [(compose_form.id, "form")],
+            "view_id": compose_form.id,
+            "target": "new",
+            "context": ctx,
+        }
 
     def action_reserved(self):
         """ To reserve booking """
@@ -174,6 +198,28 @@ class TableReservation(models.Model):
         self.write({
             'state': 'done'
         })
+        template = self.env.ref("table_reservation_on_website.table_reservation_confirmation_mail_template")
+        compose_form = self.env.ref("mail.email_compose_message_wizard_form")
+        ctx = dict(
+            default_model="table.reservation",
+            default_res_ids=self.ids,
+            default_use_template=bool(template),
+            default_template_id=template.id,
+            default_composition_mode="comment",
+            default_email_to=self.email,
+        )
+
+        return {
+            "name": template.name,
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "mail.compose.message",
+            "views": [(compose_form.id, "form")],
+            "view_id": compose_form.id,
+            "target": "new",
+            "context": ctx,
+        }
+
 
     def table_reservations(self):
         """ To show reservations in pos product screen """
