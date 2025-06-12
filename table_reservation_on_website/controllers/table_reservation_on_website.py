@@ -60,7 +60,7 @@ class TableReservation(http.Controller):
         end_time = datetime.strptime(closing, time_format)
 
         interval = timedelta(hours=interval_difference_hours)
-        gap = timedelta(minutes=10)
+        gap = timedelta(minutes=30)
 
         while start_time + interval <= end_time:
             slot_start = start_time.strftime(time_format)
