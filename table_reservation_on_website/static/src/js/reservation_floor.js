@@ -17,6 +17,12 @@ publicWidget.registry.table_reservation_floor = publicWidget.Widget.extend({
         var amountElement = this.$el.find('#total_amount')[0];
         var bookedElement = this.$el.find('#tables_input')[0];
         var rate = rateElement ? rateElement.innerText : 0;
+        var textContent = current_div_id.textContent.trim();
+        var parts = textContent.split(/\s+/);
+        var seatCount = Number(parts[parts.length - 1]) || 0;
+
+        const peopleInput = document.getElementById('people');
+        let currentMax = peopleInput ? Number(peopleInput.getAttribute('max') || 0) : 0;
         if (current_div_id.style.backgroundColor == 'green'){
             booked_table.splice(booked_table.indexOf(Number(current_div_id.id)), 1);
             current_div_id.style.backgroundColor = '#96ccd5';
@@ -28,6 +34,8 @@ publicWidget.registry.table_reservation_floor = publicWidget.Widget.extend({
             if (amountElement) {
                 amountElement.innerText = Number(amountElement.innerText) - Number(rate);
             }
+            let newMax = currentMax - seatCount;
+            peopleInput.setAttribute('max', newMax > 0 ? newMax : 0)
         }
         else{
             current_div_id.style.backgroundColor = 'green'
@@ -44,6 +52,8 @@ publicWidget.registry.table_reservation_floor = publicWidget.Widget.extend({
                     amountElement.innerText = Number(rate);
                 }
             }
+            let newMax = currentMax + seatCount;
+            peopleInput.setAttribute('max', newMax);
         }
         if (bookedElement) {
             bookedElement.value = booked_table;

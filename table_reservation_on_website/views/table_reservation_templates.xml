@@ -27,7 +27,8 @@
                                 <div class="row g-4 justify-content-center">
                                     <div class="col-md-4">
                                         <label for="date" class="form-label fw-semibold">Date</label>
-                                        <input type="date" name="date" id="date" class="form-control" required="1"/>
+                                        <input type="date" name="date" id="date" class="form-control" t-att-value="(datetime.datetime.now().date()).isoformat()"
+                                            t-att-min="(datetime.datetime.now().date()).isoformat()" required="1"/>
                                     </div>
 
                                     <div class="col-md-4">
@@ -219,7 +220,7 @@
                                                             People:
                                                         </label>
                                                         <input type="number" class="form-control form-control-sm"
-                                                               name="no_of_people" id="people" min="1" required="1"/>
+                                                               name="no_of_people" id="people" min="1" max="0" required="1"/>
                                                     </div>
                                                 </div>
                                             </div>
