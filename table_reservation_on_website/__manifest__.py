@@ -36,6 +36,7 @@
         'data/automatic_invoice.xml',
         'data/table_reservation_data.xml',
         'data/product_product_data.xml',
+        'data/email_template.xml',
         'views/table_reservation_templates.xml',
         'views/table_reservation_on_website_menus.xml',
         'views/restaurant_table_views.xml',

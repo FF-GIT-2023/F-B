@@ -1,0 +1,92 @@
+<odoo>
+    <record id="table_reservation_confirmation_mail_template" model="mail.template">
+        <field name="name">Table Reservation Confirmation Email Template</field>
+        <field name="model_id" ref="model_table_reservation"/>
+        <field name="subject">Your Table Reservation is Confirmed – [Booking Reference: {{ object.sequence }}]</field>
+        <field name="email_from">{{ object.company_id.email }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="body_html">
+            <![CDATA[
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <p style="font-size: 16px;">Dear <strong><t t-esc="object.customer_id.name" /></strong>,</p>
+
+                    <p style="font-size: 15px;">
+                        Thank you for choosing <strong><t t-esc="object.company_id.name"/></strong>!<br/>
+                        We're pleased to confirm your table reservation. Below are your booking details:
+                    </p>
+                    </hr>
+                    <div style="background-color: #f9f9f9; border-left: 4px solid #007bff; padding: 15px; margin-top: 10px; margin-bottom: 20px;">
+                        <p><strong>Reservation Details</strong></p>
+                        <p><strong>Booking Reference:</strong> <t t-esc="object.sequence"/></p>
+                        <p><strong>Name:</strong> <t t-esc="object.customer_id.name"/></p>
+                        <p><strong>Date:</strong> <t t-esc="object.date"/></p>
+                        <p><strong>Start Time:</strong> <t t-esc="object.starting_at"/></p>
+                        <p><strong>End Time:</strong> <t t-esc="object.ending_at"/></p>
+                        <p><strong>Tables Booked:</strong>
+                            <t t-set="table_list" t-value="', '.join(table.name for table in object.booked_tables_ids)"/>
+                            <t t-esc="table_list"/>
+                        </p>
+                        <p><strong>No. of Guests:</strong> <t t-esc="object.no_of_persons"/></p>
+                    </div>
+                    <p style="font-size: 14px;">
+                        We look forward to welcoming you and ensuring a memorable dining experience.<br/>
+                        If you have any changes or special requests, please contact us at <t t-esc="object.company_id.email" />
+                        or call us at <t t-esc="object.company_id.phone" />.
+                    </p>
+                    <br/>
+                    <p style="font-size: 15px;">Warm Regards,</p>
+                    <p><strong><t t-esc="object.company_id.name" /></strong></p>
+                    <p><strong>Contact: <t t-esc="object.company_id.phone" /> | <t t-esc="object.company_id.website" />
+                    </p>
+                </div>
+
+            ]]>
+        </field>
+    </record>
+
+    <record id="table_reservation_cancellation_mail_template" model="mail.template">
+        <field name="name">Table Reservation Confirmation Email Template</field>
+        <field name="model_id" ref="model_table_reservation"/>
+        <field name="subject">Your Reservation Has Been Cancelled – [Booking Reference: {{ object.sequence }}]</field>
+        <field name="email_from">{{ object.company_id.email }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="body_html">
+            <![CDATA[
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <p style="font-size: 16px;">Dear <strong><t t-esc="object.customer_id.name" /></strong>,</p>
+
+                    <p style="font-size: 15px;">
+                        Thank you for choosing <strong><t t-esc="object.company_id.name"/></strong>!<br/>
+                        We regret to inform you that your table reservation at <t t-esc="object.company_id.name" /> has been cancelled.
+                    </p>
+                    </hr>
+                    <div style="background-color: #f9f9f9; border-left: 4px solid #007bff; padding: 15px; margin-top: 10px; margin-bottom: 20px;">
+                        <p><strong>Reservation Details</strong></p>
+                        <p><strong>Booking Reference:</strong> <t t-esc="object.sequence"/></p>
+                        <p><strong>Name:</strong> <t t-esc="object.customer_id.name"/></p>
+                        <p><strong>Date:</strong> <t t-esc="object.date"/></p>
+                        <p><strong>Start Time:</strong> <t t-esc="object.starting_at"/></p>
+                        <p><strong>End Time:</strong> <t t-esc="object.ending_at"/></p>
+                        <p><strong>Tables Booked:</strong>
+                            <t t-set="table_list" t-value="', '.join(table.name for table in object.booked_tables_ids)"/>
+                            <t t-esc="table_list"/>
+                        </p>
+                        <p><strong>No. of Guests:</strong> <t t-esc="object.no_of_persons"/></p>
+                    </div>
+                    <p style="font-size: 14px;">
+                        We sincerely apologize for any inconvenience caused. If you'd like to reschedule or have
+                        any questions, please don’t hesitate to contact us at  <t t-esc="object.company_id.email" />
+                        or call us at <t t-esc="object.company_id.phone" /></br>
+                        Thank you for your understanding, and we hope to serve you soon.
+                    </p>
+                    <br/>
+                    <p style="font-size: 15px;">Best Regards,</p>
+                    <p><strong><t t-esc="object.company_id.name" /></strong></p>
+                    <p><strong>Contact: <t t-esc="object.company_id.phone" /> | <t t-esc="object.company_id.website" />
+                    </p>
+                </div>
+
+            ]]>
+        </field>
+    </record>
+</odoo>
