@@ -204,7 +204,7 @@
                                                         </label>
                                                         <input type="tel" class="form-control form-control-sm"
                                                                name="phone" id="phone" required="1"
-                                                               pattern="[0-10]{11}" max="11" min="11"
+                                                               pattern="[0-9]{10}" max="10" min="10"
                                                                inputmode="tel"
                                                                title="Enter a 10-digit phone number"/>
                                                     </div>
