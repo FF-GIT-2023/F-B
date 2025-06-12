@@ -45,7 +45,7 @@
     </record>
 
     <record id="table_reservation_cancellation_mail_template" model="mail.template">
-        <field name="name">Table Reservation Confirmation Email Template</field>
+        <field name="name">Table Reservation Cancellation Email Template</field>
         <field name="model_id" ref="model_table_reservation"/>
         <field name="subject">Your Reservation Has Been Cancelled – [Booking Reference: {{ object.sequence }}]</field>
         <field name="email_from">{{ object.company_id.email }}</field>
