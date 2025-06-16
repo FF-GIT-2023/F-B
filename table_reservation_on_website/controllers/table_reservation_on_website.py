@@ -115,51 +115,48 @@ class TableReservation(http.Controller):
         }
 
 
-    @http.route(['/restaurant/floors/tables'], type='json', auth='public',
-                website=True)
+    @http.route(['/restaurant/floors/tables'], type='json', auth='public', website=True)
     def restaurant_floors_tables(self, **kwargs):
-        """ To get non-reserved table details """
-        table_inbetween = []
+        table_inbetween = {}
         start_time = kwargs.get("start")
         end_time = kwargs.get("end")
+
+        floor_id = int(kwargs.get('floors_id'))
+        date = datetime.strptime(kwargs.get('date'), "%Y-%m-%d")
         payment = request.env['ir.config_parameter'].sudo().get_param(
             "table_reservation_on_website.reservation_charge")
-        tables = request.env['restaurant.table'].sudo().search(
-            [('floor_id', '=', int(kwargs.get('floors_id')))])
-        reserved = request.env['table.reservation'].sudo().search(
-            [('floor_id', '=', int(kwargs.get('floors_id'))), (
-                'date', '=', datetime.strptime(kwargs.get('date'),
-                                               "%Y-%m-%d")), (
-                'state', '=', 'reserved'),("starting_at", "<", end_time),
-            ("ending_at", ">", start_time)])
 
-        start_time_new = datetime.strptime(start_time.strip(),
-                                           "%H:%M").time()
+        tables = request.env['restaurant.table'].sudo().search([('floor_id', '=', floor_id)])
+
+        reserved = request.env['table.reservation'].sudo().search([
+            ('floor_id', '=', floor_id),
+            ('date', '=', date),
+            ('state', '=', 'reserved'),
+            ("starting_at", "<", end_time),
+            ("ending_at", ">", start_time)
+        ])
+
         for rec in reserved:
-            start_time = datetime.strptime(rec.starting_at, "%H:%M")
-            start_at = start_time - timedelta(
-                hours=int(rec.lead_time),
-                minutes=int((rec.lead_time % 1) * 100))
-            end_at = datetime.strptime(rec.ending_at, "%H:%M").time()
-            if start_at.time() <= start_time_new <= end_at:
-                for table in rec.booked_tables_ids:
-                    table_inbetween.append(table.id)
+            for table in rec.booked_tables_ids:
+                table_inbetween[table.id] = {
+                    'start': rec.starting_at,
+                    'end': rec.ending_at
+                }
+
         data_tables = {}
         for rec in tables:
-            if rec.id not in table_inbetween:
-                if payment:
-                    data_tables[rec.id] = {}
-                    data_tables[rec.id]['id'] = rec.id
-                    data_tables[rec.id]['name'] = rec.name
-                    data_tables[rec.id]['seats'] = rec.seats
-                    data_tables[rec.id]['rate'] = rec.rate
-                else:
-                    data_tables[rec.id] = {}
-                    data_tables[rec.id]['id'] = rec.id
-                    data_tables[rec.id]['name'] = rec.name
-                    data_tables[rec.id]['seats'] = rec.seats
-                    data_tables[rec.id]['rate'] = 0
+            is_reserved = rec.id in table_inbetween
+            data_tables[rec.id] = {
+                'id': rec.id,
+                'name': rec.name,
+                'seats': rec.seats,
+                'rate': rec.rate if payment else 0,
+                'reserved': is_reserved,
+                'booked_slot': table_inbetween.get(rec.id, {})
+            }
         return data_tables
+
+
 
     @http.route(['/booking/confirm'], type="http", auth="public",
                 csrf=False, website=True)

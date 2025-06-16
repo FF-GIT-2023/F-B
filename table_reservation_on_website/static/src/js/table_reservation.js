@@ -1,65 +1,73 @@
 /** @odoo-module */
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { jsonrpc } from "@web/core/network/rpc_service";
+
 publicWidget.registry.table_reservation = publicWidget.Widget.extend({
     selector: '.swa_container',
     events: {
         'change #floors_rest': '_onFloorChange',
+        'click .card_table.available': '_onTableClick',
     },
-    /**
-    To get all tables belongs to the floor
-    **/
-    _onFloorChange: function (ev) {
-        var floors = this.$el.find("#floors_rest")[0].value;
-        var date = this.$el.find("#date_booking").text().trim()
-        var start = this.$el.find("#booking_start").text()
+
+    selectedTables: [],
+
+    _onFloorChange: function () {
+        const self = this;
+        const floors = this.$el.find("#floors_rest")[0].value;
+        const date = this.$el.find("#date_booking").text().trim();
         const startTime = this.$('#start_id').val();
         const endTime = this.$('#end_id').val();
-        if (document.getElementById('count_table')){
-            document.getElementById('count_table').innerText = 0;
-        }
-        if (document.getElementById('total_amount')){
-            document.getElementById('total_amount').innerText = 0;
-        }
-        var self = this
-        if (floors && date && start) {
-            jsonrpc("/restaurant/floors/tables",
-                {'floors_id' : floors,
-                 'date': date,
-                 'start': startTime,
-                 'end': endTime
+
+        self.selectedTables = [];
+
+        if (floors && date && startTime && endTime) {
+            jsonrpc("/restaurant/floors/tables", {
+                'floors_id': floors,
+                'date': date,
+                'start': startTime,
+                'end': endTime
             }).then(function (data) {
-                if(floors == 0){
-                    self.$el.find('#table_container_row').empty();
-                    self.$el.find('#info').hide();
-                }
-                else{
-                    self.$el.find('#table_container_row').empty();
-                    self.$el.find('#info').show();
-                    for (let i in data){
-                        if (Object.keys(data).length > 1) {
-                            let amount = '';
-                            if (data[i]['rate'] != 0) {
-                                amount = '<br/><span><i class="fa fa-money"></i></span><span id="rate">' + data[i]['rate'] + '</span>/Slot';
-                            }
-                            self.$el.find('#table_container_row').append('<div id="'+data[i]['id'] +
-                            '" class="card card_table col-sm-2" style="background-color:#96ccd5;padding:0;margin:5px;width:250px;"><div class="card-body"><b>'  +data[i]['name'] +
-                            '</b><br/><br/><br/><span><i class="fa fa-user-o" aria-hidden="true"></i> '+ data[i]['seats']+
-                            '</span>' + amount + '</div></div><br/>');
-                        }
-                        else {
-                            let amount = '';
-                            if (data[i]['rate'] != 0) {
-                                amount = '<br/><span><i class="fa fa-money"></i></span><span id="rate">' + data[i]['rate'] + '</span>/Slot';
-                            }
-                            self.$el.find('#table_container_row').append('<div id="'+data[i]['id'] +
-                            '" class="card card_table col-sm-2" style="background-color:#96ccd5;padding:0;margin:15px;width:250px;"><div class="card-body"><b>'  +data[i]['name'] +
-                            '</b><br/><br/><br/><span><i class="fa fa-user-o" aria-hidden="true"></i> '+ data[i]['seats']+
-                            '</span>' + amount + '</div></div><br/>');
-                        }
-                    }
+                self.$el.find('#table_container_row').empty();
+                self.$el.find('#info').show();
+
+                for (let i in data) {
+                    const table = data[i];
+                    const amount = table.rate != 0 ? `<br/><span><i class="fa fa-money"></i></span><span id="rate">${table.rate}</span>/Slot` : '';
+
+                    const isReserved = table.reserved;
+                    const bgColor = isReserved ? '#dc3545' : '#28a745';
+                    const pointerStyle = isReserved ? 'not-allowed' : 'pointer';
+                    const tableClass = isReserved ? 'reserved' : 'available';
+                    const slotInfo = isReserved && table.booked_slot
+                        ? `<div style="margin-top:10px;"><i class="fa fa-clock-o"></i>Booked on ${table.booked_slot.start} - ${table.booked_slot.end}</div>`
+                        : '';
+
+                    self.$el.find('#table_container_row').append(`
+                        <div id="table_${table.id}" data-id="${table.id}" class="card card_table ${tableClass} col-sm-2"
+                             style="background-color:${bgColor};padding:0;margin:10px;width:250px;cursor:${pointerStyle};">
+                            <div class="card-body text-center">
+                                <b>${table.name}</b><br/><br/>
+                                <span><i class="fa fa-user-o" aria-hidden="true"></i> ${table.seats}</span>
+                                ${amount}
+                                ${slotInfo}
+                            </div>
+                        </div>
+                    `);
                 }
             });
         }
+    },
+
+    _onTableClick: function (ev) {
+        const $table = $(ev.currentTarget);
+        const tableId = parseInt($table.attr('data-id'));
+        if (this.selectedTables.includes(tableId)) {
+            this.selectedTables = this.selectedTables.filter(id => id !== tableId);
+            $table.css('background-color', '#28a745');
+        } else {
+            this.selectedTables.push(tableId);
+            $table.css('background-color', '#007bff');
+        }
+        $('#tables_input').val(this.selectedTables.join(','));
     },
 });
