@@ -39,12 +39,12 @@ publicWidget.registry.table_reservation = publicWidget.Widget.extend({
                     const pointerStyle = isReserved ? 'not-allowed' : 'pointer';
                     const tableClass = isReserved ? 'reserved' : 'available';
                     const slotInfo = isReserved && table.booked_slot
-                        ? `<div style="margin-top:10px;"><i class="fa fa-clock-o"></i>Booked on ${table.booked_slot.start} - ${table.booked_slot.end}</div>`
+                        ? `<div style="margin-top:10px;"><i class="fa fa-clock-o"></i> Booked on ${table.booked_slot.start} - ${table.booked_slot.end}</div>`
                         : '';
 
                     self.$el.find('#table_container_row').append(`
                         <div id="table_${table.id}" data-id="${table.id}" class="card card_table ${tableClass} col-sm-2"
-                             style="background-color:${bgColor};padding:0;margin:10px;width:250px;cursor:${pointerStyle};">
+                             style="background-color:${bgColor};padding:0;margin:10px;width:250px;cursor:${pointerStyle};${isReserved ? 'pointer-events: none;' : ''}">
                             <div class="card-body text-center">
                                 <b>${table.name}</b><br/><br/>
                                 <span><i class="fa fa-user-o" aria-hidden="true"></i> ${table.seats}</span>
