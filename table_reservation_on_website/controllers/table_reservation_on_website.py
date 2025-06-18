@@ -93,28 +93,6 @@ class TableReservation(http.Controller):
         return http.request.render(
             "table_reservation_on_website.restaurant_floors", vals)
 
-    @http.route(['/restaurant/check_table_availability'], type='json', auth='public', website=True)
-    def check_table_availability(self, floor_id, date, start_time, end_time):
-        floor_id = int(floor_id)
-
-        tables = request.env['restaurant.table'].sudo().search([("floor_id", "=", floor_id)])
-
-        booked = request.env['table.reservation'].sudo().search([
-            ("date", "=", date),
-            ("starting_at", "<", end_time),
-            ("ending_at", ">", start_time),
-        ]).mapped("booked_tables_ids")
-
-        available_tables = tables.filtered(lambda t: t.id not in booked.ids)
-        available_table_ids = available_tables.ids
-        available_seats_count = sum(available_tables.mapped("seats"))
-        return {
-            "available_table_ids": available_table_ids,
-            "total_tables": len(tables),
-            "available_seats_count": available_seats_count,
-        }
-
-
     @http.route(['/restaurant/floors/tables'], type='json', auth='public', website=True)
     def restaurant_floors_tables(self, **kwargs):
         table_inbetween = {}
@@ -155,8 +133,6 @@ class TableReservation(http.Controller):
                 'booked_slot': table_inbetween.get(rec.id, {})
             }
         return data_tables
-
-
 
     @http.route(['/booking/confirm'], type="http", auth="public",
                 csrf=False, website=True)
@@ -249,73 +225,46 @@ class TableReservation(http.Controller):
                 company = request.env.company
 
                 body_html = f"""
-                <table border=0 cellpadding=0 cellspacing=0 style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align=center>
-                <table border=0 cellpadding=0 cellspacing=0 width=590 style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
-                <tbody>
-                <!-- HEADER -->
-                <tr>
-                <td align=center style="min-width: 590px;">
-                <table border=0 cellpadding=0 cellspacing=0 width=590 style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                <tr>
-                <td valign=middle>
-                <span style="font-size: 10px;">{reservation.sequence}</span><br/>
-                <span style="font-size: 20px; font-weight: bold;">Table Reservation</span>
-                </td>
-                <td valign="middle" align="right">
-                <img src="/logo.png?company={company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;"/>
-                </td>
-                </tr>
-                <tr><td colspan="2" style="text-align:center;">
-                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
-                </td></tr>
-                </table>
-                </td>
-                </tr>
-                <!-- CONTENT -->
-                <tr>
-                <td align="center" style="min-width: 590px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                <tr>
-                <td valign="top" style="font-size: 13px;">
-                <div>
-                Dear {request.env.user.name},<br/><br/>
-                Your table booking at {floor.name} has been confirmed on {reservation.date} for {reservation.starting_at} to {reservation.ending_at}. {final_sentence}
-                <br/><br/>
-                Best regards<br/>
-                </div>
-                </td>
-                </tr>
-                <tr>
-                <td style="text-align:center;">
-                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
-                </td>
-                </tr>
-                </table>
-                </td>
-                </tr>
-                <!-- FOOTER -->
-                <tr>
-                <td align="center" style="min-width: 590px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                <tr>
-                <td valign="middle" align="left">
-                {company.name}<br/>
-                {company.phone or ''}
-                </td>
-                <td valign="middle" align="right">
-                <a href="mailto:{company.email}" style="text-decoration:none; color: #5e6061;">{company.email}</a><br/>
-                <a href="{company.website}" style="text-decoration:none; color: #5e6061;">{company.website}</a>
-                </td>
-                </tr>
-                </table>
-                </td>
-                </tr>
-                </tbody>
+                <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9f9f9; padding:20px; font-family:Arial, sans-serif; color:#333;">
+                    <tr>
+                        <td align="center">
+                            <table width="600" cellpadding="20" cellspacing="0" style="background-color:#ffffff; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+                                <tr>
+                                    <td align="left" style="padding-bottom:0;">
+                                        <p style="margin:20px 0 10px 0;">Dear {reservation.customer_id.name},</p>
+                                        <p style="margin:0;">
+                                            Thank you for choosing <strong>{company.name}</strong>!<br/>
+                                            We’ve received your table reservation request through our website.
+                                        </p>
+                                        <h3 style="margin:20px 0 10px 0;">Reservation Details:</h3>
+                                        <ul style="padding-left:20px; margin:0;">
+                                            <li><strong>Name:</strong> {reservation.customer_id.name}</li>
+                                            <li><strong>Floor:</strong> {floor.name}</li>
+                                            <li><strong>Tables:</strong> {tables_sentence}</li>
+                                            <li><strong>Date:</strong> {reservation.date} & <strong>Time:</strong> {reservation.starting_at} to {reservation.ending_at}</li>
+                                            <li><strong>Guests:</strong> {reservation.no_of_persons}</li>
+                                        </ul>
+                                        <p style="margin:20px 0 0 0;">
+                                            Kindly note that your reservation request is currently being reviewed. A confirmation email will be sent to you shortly.
+                                        </p>
+                                        <p>
+                                            If you have any special requests or need to make changes, feel free to contact us at <strong>{company.phone or 'N/A'}</strong> or <strong>{company.email or 'N/A'}</strong>.
+                                        </p>
+                                        <p>
+                                            We look forward to welcoming you soon!<br/>
+                                            <strong>Warm regards,</strong><br/>
+                                            <strong>{company.name}</strong><br/>
+                                            <a href="{company.website}" style="color:#1a73e8;">{company.website}</a> | <span>{company.phone or ''}</span>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
                 </table>
                 """
-
                 request.env['mail.mail'].sudo().create({
-                    'subject': "Table reservation",
+                    'subject': "Thank You For Your Table Reservation Request",
                     'email_to': reservation.customer_id.email,
                     'recipient_ids': [request.env.user.partner_id.id],
                     'body_html': body_html,

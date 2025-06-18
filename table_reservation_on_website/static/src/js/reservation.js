@@ -10,7 +10,6 @@ publicWidget.registry.reservation = publicWidget.Widget.extend({
         'change #end_time': '_onChangeTime',
         'click .close_btn_alert_modal': '_onClickCloseBtn',
         'click .close_btn_time_alert_modal': '_onClickCloseAlertBtn',
-        'change .select_floor': '_onChangeFloor',
     },
     async start() {
         this.openingHour = null;
@@ -39,35 +38,6 @@ publicWidget.registry.reservation = publicWidget.Widget.extend({
             this.$el.find("#date").val('')
         }
         this._onChangeTime()
-    },
-
-    _onChangeFloor: async function () {
-        const floorId = this.$('#floors_rest').val();
-        const date = this.$('#date_id').val();
-        const startTime = this.$('#start_id').val();
-        const endTime = this.$('#end_id').val();
-
-        if (!floorId || !date || !startTime || !endTime || floorId === "0") {
-            return;
-        }
-
-        try {
-            const result = await jsonrpc('/restaurant/check_table_availability', {
-                floor_id: floorId,
-                date: date,
-                start_time: startTime,
-                end_time: endTime,
-            });
-            if (result.total_tables === 0) {
-                this.$el.find("#check_tables").show();
-                this.$el.find("#booking_info").hide();
-            }else {
-                this.$el.find("#check_tables").hide();
-                this.$el.find("#booking_info").show();
-            }
-        } catch (error) {
-            console.error("Error checking availability", error);
-        }
     },
 
     // To close the alert modal if invalid date is chosen.
