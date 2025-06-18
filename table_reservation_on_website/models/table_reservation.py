@@ -124,6 +124,7 @@ class TableReservation(models.Model):
         else:
             tables = self.env['restaurant.table'].browse([])
             self.available_tables = [(6, 0, [table.id for table in tables])]
+
     @api.model
     def create(self, vals):
         """ Super create function to add sequence number """
