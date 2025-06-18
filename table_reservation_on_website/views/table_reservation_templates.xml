@@ -155,7 +155,7 @@
                         <div id="info" class="mx-0 mx-md-1 my-3" style="display:none;">
                             <div id="tableContainer" class="w-100 d-flex flex-column">
 
-                                <div class="row g-2 mx-0" id="table_container_row" style="min-height:80px"/>
+                                <div class="row g-2 mx-0" id="table_container_row"/>
 
                                 <div id="booking_info" class="card shadow-sm rounded-3 w-100 my-2"
                                      style="display:none;background-color:#c8e0e0;border:0;">

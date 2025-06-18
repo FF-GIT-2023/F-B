@@ -54,22 +54,26 @@ publicWidget.registry.table_reservation = publicWidget.Widget.extend({
                                 background-color: ${bgColor};
                                 padding: 0;
                                 margin: 10px;
-                                height: 160px;
-                                width: 200px;
+                                margin-left: 50px;
+                                height: 100px;
+                                width: 250px;
                                 cursor: ${pointerStyle};
                                 pointer-events: ${isReserved ? 'none' : 'auto'};
                                 border-radius: 15px;
                                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
                                 transition: transform 0.2s ease, box-shadow 0.2s ease;
                                 color: white;
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
                             ">
-                            <div class="card-body text-center d-flex flex-column justify-content-center align-items-center" style="padding: 10px;">
-                                <b style="font-size: 18px;">${table.name}</b>
-                                <div style="margin-top: 10px;">
-                                    <i class="fa fa-user-o" aria-hidden="true"></i> ${table.seats}
-                                </div>
+                            <div class="left-info" style="flex: 1; padding: 10px; font-size: 13px;">
+                                <div><i class="fa fa-user-o"></i> Seats: ${table.seats}</div>
                                 ${amount}
                                 ${slotInfo}
+                            </div>
+                            <div class="right-name" style="flex: 1; padding: 10px; text-align: center;">
+                                <b style="font-size: 18px;">${table.name}</b>
                             </div>
                         </div>
                     `);
@@ -94,5 +98,5 @@ publicWidget.registry.table_reservation = publicWidget.Widget.extend({
         } else {
             $('#table_confirm').prop('disabled', true);
         }
-        },
+    },
 });
