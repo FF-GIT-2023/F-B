@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_table_reservation_report_wiz_form" model="ir.ui.view">
+        <field name="name">table.reservation.report.wiz.form</field>
+        <field name="model">floor.report.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Table Reservation Report Wizard">
+                <group>
+                    <field name="start_date" />
+                    <field name="end_date" />
+                    <field name="floor_ids" widget="many2many_tags" />
+                </group>
+                <footer>
+                    <button
+            name="action_generate_report"
+            type="object"
+            string="Generate Report"
+            class="btn-primary"
+          />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_table_reservation_report_wiz" model="ir.actions.act_window">
+        <field name="name">Table Reservation Report</field>
+        <field name="res_model">floor.report.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_table_reservation_report_wiz_form" />
+        <field name="target">new</field>
+    </record>
+
+
+    <menuitem
+    id="menu_table_reservation_report_wiz"
+    name="Table Reservation Report"
+    action="action_table_reservation_report_wiz"
+    parent="point_of_sale.menu_point_rep"
+    sequence="115"
+  />
+
+</odoo>
