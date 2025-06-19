@@ -1,0 +1,99 @@
+<odoo>
+    <template id="ff_report_table_reservation">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page">
+
+                    <h2
+            style="text-align: center; font-weight: bold;"
+          >Table Reservation Report</h2>
+
+
+                    <p style="text-align: center; font-weight: bold;">
+                        Date Range:
+                        <span t-esc="start_date" />
+                        -
+                        <span t-esc="end_date" />
+                    </p>
+                    <table
+            style="width: 100%; border-collapse: collapse; font-size: 13px; border: 1px solid black; text-align: center;"
+          >
+                        <thead>
+                            <tr style="background-color: #f0f0f0;">
+                                <th
+                  style="padding: 6px; border: 1px solid black;"
+                >Sequence</th>
+                                <th
+                  style="padding: 6px; border: 1px solid black;"
+                >Customer</th>
+                                <th
+                  style="padding: 6px; border: 1px solid black;"
+                >Phone</th>
+                                <th
+                  style="padding: 6px; border: 1px solid black;"
+                >No. of Guests</th>
+                                <th
+                  style="padding: 6px; border: 1px solid black;"
+                >Date</th>
+                                <th
+                  style="padding: 6px; border: 1px solid black;"
+                >Tables</th>
+                                <th
+                  style="padding: 6px; border: 1px solid black;"
+                >Floor</th>
+                                <th
+                  style="padding: 6px; border: 1px solid black;"
+                >Starting At</th>
+                                <th
+                  style="padding: 6px; border: 1px solid black;"
+                >Ending At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="reservations" t-as="res">
+                                <tr>
+                                    <td
+                    style="padding: 6px; border: 1px solid black;"
+                    t-esc="res['sequence']"
+                  />
+                                    <td
+                    style="padding: 6px; border: 1px solid black;"
+                    t-esc="res['customer']"
+                  />
+                                    <td
+                    style="padding: 6px; border: 1px solid black;"
+                    t-esc="res['phone']"
+                  />
+                                    <td
+                    style="padding: 6px; border: 1px solid black;"
+                    t-esc="res['no_of_persons']"
+                  />
+                                    <td
+                    style="padding: 6px; border: 1px solid black;"
+                    t-esc="res['date']"
+                  />
+                                    <td
+                    style="padding: 6px; border: 1px solid black;"
+                    t-esc="res['tables']"
+                  />
+                                    <td
+                    style="padding: 6px; border: 1px solid black;"
+                    t-esc="res['floor']"
+                  />
+                                    <td
+                    style="padding: 6px; border: 1px solid black;"
+                    t-esc="res['starting_at']"
+                  />
+                                    <td
+                    style="padding: 6px; border: 1px solid black;"
+                    t-esc="res['ending_at']"
+                  />
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
