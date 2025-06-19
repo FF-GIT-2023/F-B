@@ -8,7 +8,8 @@
                     <div class="card shadow-lg opening_closing_hours_child_div">
                         <div>
 
-                            <h2 class="text-center mb-3 text-primary fw-bold">Table Reservation</h2>
+                            <h2 class="text-center mb-3 text-primary fw-bold">Reservation</h2>
+                            <h4 class="text-center mb-3 text-primary fw-bold">Book A Table</h4>
 
                             <t t-if="opening_hour and closing_hour">
                                 <h5 class="text-center text-muted mb-4">
