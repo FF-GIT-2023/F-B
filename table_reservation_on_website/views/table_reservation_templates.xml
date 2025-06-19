@@ -3,10 +3,10 @@
 
     <template id="table_reservation" name="Table Reservation">
         <t t-call="website.layout">
-            <div id="wrap" class="oe_structure">
+            <div id="wrap" class="oe_structure opening_closing_hours_main_div">
                 <div class="container py-5">
-                    <div class="card shadow-lg rounded-4">
-                        <div class="card-body px-5 py-4">
+                    <div class="card shadow-lg opening_closing_hours_child_div">
+                        <div>
 
                             <h2 class="text-center mb-3 text-primary fw-bold">Table Reservation</h2>
 
@@ -114,8 +114,8 @@
     <!--  Template for floors  -->
     <template id="restaurant_floors" name="Admission Submit">
         <t t-call="website.layout">
-            <div id="wrap" class="oe_structure oe_empty">
-                <div class="container swa_container card shadow-lg rounded-4 my-3 my-md-4">
+            <div id="wrap" class="oe_structure oe_empty floor_main_div">
+                <div class="container swa_container card shadow-lg floor_child_div">
                     <form action="/booking/confirm" method="POST" enctype="multipart/form-data" class="oe_import">
                         <div class="row align-items-center py-2 py-md-3 g-2">
                             <div class="col-12 col-md-3 col-lg-2">
@@ -157,7 +157,7 @@
 
                                 <div class="row g-2 mx-0" id="table_container_row"/>
 
-                                <div id="booking_info" class="card shadow-sm rounded-3 w-100 my-2"
+                                <div id="booking_info" class="card shadow-sm rounded-3 w-100 my-2 mt-4"
                                      style="display:none;background-color:#c8e0e0;border:0;">
                                     <div class="card-body p-2 p-md-3">
                                         <h5 class="card-title text-center mb-2 fs-5">

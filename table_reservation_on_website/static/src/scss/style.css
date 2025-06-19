@@ -23,29 +23,3 @@
 .swa_container {
     max-width: 1200px;
 }
-
-@media (max-width: 767.98px) {
-    .swa_container {
-        padding: 0.75rem;
-    }
-    .card-body {
-        padding: 0.75rem !important;
-    }
-    .form-label {
-        margin-bottom: 0.2rem;
-    }
-    #booking_info .card-title {
-        font-size: 1.1rem !important;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 991.98px) {
-    .swa_container {
-        padding: 1rem;
-    }
-}
-
-.table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}

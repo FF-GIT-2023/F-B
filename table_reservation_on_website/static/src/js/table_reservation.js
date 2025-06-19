@@ -34,7 +34,7 @@ publicWidget.registry.table_reservation = publicWidget.Widget.extend({
                 for (let i in data) {
                     const table = data[i];
                     const amount = table.rate != 0
-                        ? `<br/><span><i class="fa fa-money"></i></span><span id="rate">${table.rate}</span>/Slot`
+                        ? `<br/><span><i class="fa fa-money"></i></span><span id="rate">${table.rate}</span>/Table`
                         : '';
 
                     const isReserved = table.reserved;
@@ -54,7 +54,6 @@ publicWidget.registry.table_reservation = publicWidget.Widget.extend({
                                 background-color: ${bgColor};
                                 padding: 0;
                                 margin: 10px;
-                                margin-left: 50px;
                                 height: 100px;
                                 width: 250px;
                                 cursor: ${pointerStyle};
