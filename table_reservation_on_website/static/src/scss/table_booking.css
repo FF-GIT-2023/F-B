@@ -1,0 +1,66 @@
+.opening_closing_hours_main_div {
+  background: url("/table_reservation_on_website/static/src/images/restaurant_bg.png")
+    no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.opening_closing_hours_child_div {
+  background: rgba(255, 255, 255, 0.8);
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  padding: 20px 40px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.floor_main_div {
+  background: url("/table_reservation_on_website/static/src/images/restaurant_bg.png")
+    no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  height: 100vh;
+  padding: 20px 40px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+.floor_child_div {
+  background: rgba(255, 255, 255, 0.8);
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  padding: 20px 40px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+@media (max-width: 767.98px) {
+    .swa_container {
+        padding: 0.75rem;
+    }
+    .card-body {
+        padding: 0.75rem !important;
+    }
+    .form-label {
+        margin-bottom: 0.2rem;
+    }
+    #booking_info .card-title {
+        font-size: 1.1rem !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .swa_container {
+        padding: 1rem;
+    }
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}

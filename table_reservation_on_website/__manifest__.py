@@ -73,6 +73,7 @@
             'table_reservation_on_website/static/src/js/table_reservation.js',
             'table_reservation_on_website/static/src/js/reservation.js',
             'table_reservation_on_website/static/src/js/reservation_floor.js',
+            'table_reservation_on_website/static/src/scss/table_booking.css',
         ],
     },
     'images': ['static/description/banner.png'],
