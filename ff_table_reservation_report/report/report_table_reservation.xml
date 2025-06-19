@@ -3,7 +3,7 @@
     <record id="action_report_table_reservation" model="ir.actions.report">
         <field name="name">Table Reservation Report</field>
         <field name="model">floor.report.wiz</field>
-        <field name="report_type">qweb-html</field>
+        <field name="report_type">qweb-pdf</field>
         <field
       name="report_name"
     >ff_table_reservation_report.ff_report_table_reservation</field>
