@@ -1,5 +1,5 @@
 .opening_closing_hours_main_div {
-  background: url("/table_reservation_on_website/static/src/images/restaurant_bg.png")
+  background: url("/table_reservation_on_website/static/src/images/albert.jpg")
     no-repeat center center fixed;
   background-size: cover;
   display: flex;
@@ -18,7 +18,7 @@
 }
 
 .floor_main_div {
-  background: url("/table_reservation_on_website/static/src/images/restaurant_bg.png")
+  background: url("/table_reservation_on_website/static/src/images/albert.jpg")
     no-repeat center center fixed;
   background-size: cover;
   display: flex;
