@@ -49,7 +49,7 @@ publicWidget.registry.table_reservation = publicWidget.Widget.extend({
 
                     self.$el.find('#table_container_row').append(`
                         <div id="table_${table.id}" data-id="${table.id}"
-                             class="card card_table ${tableClass} ${hoverClass} col-sm-2"
+                             data-value="${table.seats}" class="card card_table ${tableClass} ${hoverClass} col-sm-2"
                              style="
                                 background-color: ${bgColor};
                                 padding: 0;
@@ -84,12 +84,19 @@ publicWidget.registry.table_reservation = publicWidget.Widget.extend({
     _onTableClick: function (ev) {
         const $table = $(ev.currentTarget);
         const tableId = parseInt($table.attr('data-id'));
+        const tableSeat = parseInt($table.attr('data-value'));
+        const peopleInput = document.getElementById('people');
+        let currentMax = peopleInput ? Number(peopleInput.getAttribute('max') || 0) : 0;
         if (this.selectedTables.includes(tableId)) {
             this.selectedTables = this.selectedTables.filter(id => id !== tableId);
             $table.css('background-color', '#27ae60');
+            let newMax = currentMax - tableSeat;
+            peopleInput.setAttribute('max', newMax > 0 ? newMax : 0)
         } else {
             this.selectedTables.push(tableId);
             $table.css('background-color', '#2980b9');
+            let newMax = currentMax + tableSeat;
+            peopleInput.setAttribute('max', newMax);
         }
         $('#tables_input').val(this.selectedTables.join(','));
         if (this.selectedTables.length > 0) {
