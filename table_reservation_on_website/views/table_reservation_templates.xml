@@ -237,7 +237,8 @@
                                                             People:
                                                         </label>
                                                         <input type="number" class="form-control form-control-sm"
-                                                               name="no_of_people" id="people" min="1" max="0" required="1"/>
+                                                               name="no_of_people" id="people" min="1" max="0"
+                                                               required="1" inputmode="numeric" />
                                                     </div>
                                                 </div>
                                             </div>
