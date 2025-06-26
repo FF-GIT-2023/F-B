@@ -14,6 +14,7 @@ saleOrderFetcherService.start = function(env, deps) {
         const domain = [
             ["currency_id", "=", this.pos.currency.id],
             ["state", "=", "sale"],
+            ["website_id", "!=", false],
         ].concat(this.searchDomain || []);
 
         this.pos.set_synch("connecting");
