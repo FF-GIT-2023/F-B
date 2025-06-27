@@ -5,7 +5,7 @@
         <field name="name">table.reservation.view.tree</field>
         <field name="model">table.reservation</field>
         <field name="arch" type="xml">
-            <tree default_order="date desc">
+            <tree default_order="sequence desc">
                 <field name="sequence"/>
                 <field name="customer_id"/>
                 <field name="email"/>
