@@ -108,14 +108,12 @@ patch(ProductScreen.prototype, {
             lastOrderCount = await orm.call("sale.order", "search_count", [[
                 ["company_id", "=", companyId],
                 ["state", "=", "sale"],
-                ["website_id", "!=", false],
             ]]);
 
             intervalId = setInterval(async () => {
                 const currentOrderCount = await orm.call("sale.order", "search_count", [[
                     ["company_id", "=", companyId],
                     ["state", "=", "sale"],
-                    ["website_id", "!=", false],
                 ]]);
 
                 if (currentOrderCount > lastOrderCount) {
