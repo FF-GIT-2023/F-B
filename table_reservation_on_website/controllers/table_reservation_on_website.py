@@ -59,8 +59,12 @@ class TableReservation(http.Controller):
         start_time = datetime.strptime(opening, time_format)
         end_time = datetime.strptime(closing, time_format)
 
-        interval = timedelta(hours=interval_difference_hours)
-        gap = timedelta(minutes=30)
+        if not interval_difference_hours:
+            interval = timedelta(minutes=30)
+            gap = timedelta()
+        else:
+            interval = timedelta(hours=interval_difference_hours)
+            gap = timedelta(minutes=30)
 
         while start_time + interval <= end_time:
             slot_start = start_time.strftime(time_format)
@@ -68,6 +72,7 @@ class TableReservation(http.Controller):
             slots.append(f"{slot_start} - {slot_end}")
             start_time = start_time + interval + gap
         return slots
+
 
     @http.route(['/restaurant/floors'], type='http', auth='public', website=True)
     def restaurant_floors(self, **kwargs):
