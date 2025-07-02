@@ -24,10 +24,6 @@ patch(SaleOrderManagementScreen.prototype, {
     },
 
     async onClickSaleOrder(clickedOrder) {
-        // Your custom logic here
-        // For example, display a custom popup
-        console.log("asdasfjafsafa");
-//        this.rpc = useService("rpc");
         const { confirmed, payload: selectedOption } = await this.popup.add(SelectionPopup, {
             title: _t("What do you want to do?"),
             list: [
@@ -97,13 +93,20 @@ patch(SaleOrderManagementScreen.prototype, {
 
             if (selectedOption == "settle") {
                 // settle the order
-                const { confirmed, payload: prepTime } = await this.popup.add(NumberPopup, {
-                    title: _t("Delivery Time (minutes)"),
-                    body: _t("Please enter the estimated delivery time in minutes."),
-                    startingValue: 0,
-                    confirmText: _t("Confirm"),
-                    cancelText: _t("Cancel"),
+                const timeOptions = (this.pos.config.delivery_time_options || "10,20,30")
+                    .split(",")
+                    .map(t => parseInt(t.trim(), 10))
+                    .filter(t => !isNaN(t));
+
+                const { confirmed, payload: prepTime } = await this.popup.add(SelectionPopup, {
+                    title: _t("Select Delivery Time"),
+                    list: timeOptions.map(t => ({
+                        id: t,
+                        label: _t(`${t} minutes`),
+                        item: t,
+                    })),
                 });
+
 
                 if (!confirmed) {
                     return; // User canceled the popup
@@ -117,7 +120,6 @@ patch(SaleOrderManagementScreen.prototype, {
                     });
                     return;
                 }
-                console.log("Sale Order",sale_order);
                 const lines = sale_order.order_line;
                 var mail_data = {
                     'partner': sale_order.partner_id,

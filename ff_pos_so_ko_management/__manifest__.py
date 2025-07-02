@@ -8,6 +8,7 @@
     'maintainer': 'ForeFront Technologies',
     'category': 'Point Of Sale',
     'depends': ['point_of_sale', 'pos_sale', 'sale'],
+    'data': ['views/res_config_settings_views.xml'],
     'assets': {
         'point_of_sale._assets_pos': [
             'ff_pos_so_ko_management/static/src/js/so_management_patch.js',
