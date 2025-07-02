@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos.ko.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id"
+               ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pos_interface_section']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="delivery_time_bool"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="delivery_time_options"/>
+                        <div class="text-muted">
+                            Enter delivery time options in minutes, separated by commas. E.g. 10,20,30
+                        </div>
+                    </div>
+                    <div class="o_setting_right_pane" style="display:flex;"
+                         invisible="not delivery_time_bool">
+                        <field name="delivery_time_options"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
