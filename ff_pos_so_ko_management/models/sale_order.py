@@ -95,6 +95,7 @@ class SaleOrder(models.Model):
     @api.model
     def cancel_sale_order_by_id(self, order_id):
         order = self.env['sale.order'].sudo().browse(order_id)
+        order.write({"state": "cancel"})
         company = self.env.company
         if order:
             order.sudo().action_cancel()
