@@ -15,6 +15,7 @@ saleOrderFetcherService.start = function(env, deps) {
             ["currency_id", "=", this.pos.currency.id],
             ["state", "=", "sale"],
             ["website_id", "!=", false],
+            ["pos_sale_order_filter", "=", "draft"],
         ].concat(this.searchDomain || []);
 
         this.pos.set_synch("connecting");
