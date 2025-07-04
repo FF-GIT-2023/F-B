@@ -12,6 +12,10 @@ class SaleOrder(models.Model):
         order_lines = mail_data['lines']
         order_number = sale_order['order_line'][0]['display_name'].split(' - ')[0]
         partner = self.env['res.partner'].browse(partner_id)
+        order = self.env['sale.order'].browse(sale_order["id"])
+        invoice = order._create_invoices()
+        invoice.action_post()
+        order.write({"pos_sale_order_filter": "done"})
         if not partner.email:
             return {'error': _('Customer has no email address.')}
 
