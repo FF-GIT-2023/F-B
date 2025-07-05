@@ -12,6 +12,7 @@ let alertSound = null;
 patch(ProductScreen.prototype, {
     setup() {
         super.setup();
+        const rpc = useService("rpc");
         const orm = useService("orm");
         const pos = usePos();
 
@@ -22,7 +23,7 @@ patch(ProductScreen.prototype, {
         const showEnableSoundPrompt = () => {
             const prompt = document.createElement("div");
             prompt.className = "pos-enable-sound-prompt";
-            prompt.innerHTML = `<div class="pos-prompt-content">🔔 Click anywhere to enable sound alerts!</div>`;
+            prompt.innerHTML = `<div class="pos-prompt-content">Click anywhere to enable sound alerts!</div>`;
 
             Object.assign(prompt.style, {
                 position: "fixed",
@@ -62,37 +63,64 @@ patch(ProductScreen.prototype, {
             document.body.addEventListener("touchstart", unlockAudio, { once: true });
         };
 
-        const showCustomNotification = (message) => {
-            const notification = document.createElement("div");
-            notification.className = "pos-custom-notification";
-            notification.innerHTML = `<div class="pos-notification-content">${message}</div>`;
+        const checkUpcomingReservations = async () => {
+            try {
+                const result = await rpc("/pos/reservation_alert", {});
+                if (result && result.alerts.length) {
+                    const shown = JSON.parse(localStorage.getItem("shown_reservations") || "[]");
+                    const newAlerts = result.alerts.filter(r => !shown.includes(r.sequence));
 
-            Object.assign(notification.style, {
-                position: "fixed",
-                top: "60px",
-                right: "15px",
-                width: "300px",
-                height: "120px",
-                background: "#2a9d8f",
-                color: "white",
-                padding: "10px",
-                borderRadius: "12px",
-                zIndex: 9999,
-                boxShadow: "0 4px 16px rgba(0, 0, 0, 0.3)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                textAlign: "center",
-                fontSize: "15px",
-                fontWeight: "bold",
-            });
-            document.body.appendChild(notification);
+                    if (newAlerts.length) {
+                        const alertLines = newAlerts.map(
+                            r => `• ${r.customer} - ${r.start_time} (Reservation: ${r.sequence})`
+                        ).join('<br/>');
 
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
+                        const notification = document.createElement("div");
+                        notification.className = "pos-custom-notification";
+                        notification.innerHTML = `
+                            <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">
+                                Upcoming Table Reservation
+                            </div>
+                            <div style="text-align: left;">${alertLines}</div>
+                        `;
+
+                        Object.assign(notification.style, {
+                            position: "fixed",
+                            top: "60px",
+                            right: "15px",
+                            maxWidth: "320px",
+                            background: "#2a9d8f",
+                            color: "white",
+                            padding: "12px 16px",
+                            borderRadius: "12px",
+                            zIndex: 9999,
+                            boxShadow: "0 4px 16px rgba(0, 0, 0, 0.3)",
+                            fontSize: "14px",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                        });
+
+                        document.body.appendChild(notification);
+
+                        setTimeout(() => {
+                            if (notification.parentNode) {
+                                notification.parentNode.removeChild(notification);
+                            }
+                        }, 10000);
+
+                        if (audioUnlocked && alertSound) {
+                            alertSound.currentTime = 0;
+                            await alertSound.play();
+                        }
+
+                        const updated = [...shown, ...newAlerts.map(r => r.sequence)];
+                        localStorage.setItem("shown_reservations", JSON.stringify(updated));
+                    }
                 }
-            }, 10000);
+            } catch (error) {
+                console.error("Reservation alert fetch failed", error);
+            }
         };
 
         onMounted(async () => {
@@ -126,8 +154,28 @@ patch(ProductScreen.prototype, {
                         }
                     }
 
-                    showCustomNotification("🎉 New table reservation received!");
+                    const notif = document.createElement("div");
+                    notif.innerHTML = `<div style="font-weight:bold;font-size:16px;margin-bottom:6px;">New table reservation received!</div>`;
+                    Object.assign(notif.style, {
+                        position: "fixed",
+                        top: "60px",
+                        right: "15px",
+                        maxWidth: "300px",
+                        background: "#2a9d8f",
+                        color: "white",
+                        padding: "12px 16px",
+                        borderRadius: "12px",
+                        zIndex: 9999,
+                        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.3)",
+                        fontSize: "14px",
+                    });
+                    document.body.appendChild(notif);
+                    setTimeout(() => {
+                        notif.remove();
+                    }, 10000);
                 }
+
+                await checkUpcomingReservations();
             }, 10000);
         });
 
