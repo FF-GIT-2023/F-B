@@ -69,7 +69,16 @@ class ResConfigSettings(models.TransientModel):
         string="Table Reservation Interval (Hours)",
         readonly=False
     )
-
+    reservation_alert_lead_time_bool = fields.Boolean("Reservation Alert Boolean",
+                                                      related="pos_config_id.reservation_alert_lead_time_bool",
+                                                      readonly=False)
+    reservation_alert_lead_time = fields.Float(
+        related="pos_config_id.reservation_alert_lead_time",
+        string="Reservation Alert Lead Time (hours)",
+        default=1.0,
+        readonly=False,
+        help="Number of hours before a reservation to trigger an alert in POS."
+    )
     def set_values(self):
         """ To set the value for fields in config setting """
         res = super(ResConfigSettings, self).set_values()

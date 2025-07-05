@@ -67,7 +67,7 @@ class TableReservation(models.Model):
                                   help="Amount for booking", store=True,
                                   compute="_compute_booking_amount")
     state = fields.Selection([('draft', "Draft"), ('reserved', 'Reserved'),
-                              ('done', "Done"), ("cancel", "Cancelled")],
+                              ("cancel", "Cancelled")],
                              default='draft', string="Status",
                              help="State for records")
     type = fields.Selection(string='Order Type',
@@ -196,9 +196,6 @@ class TableReservation(models.Model):
 
     def action_done(self):
         """ Change state into done """
-        self.write({
-            'state': 'done'
-        })
         template = self.env.ref("table_reservation_on_website.table_reservation_confirmation_mail_template")
         compose_form = self.env.ref("mail.email_compose_message_wizard_form")
         ctx = dict(
