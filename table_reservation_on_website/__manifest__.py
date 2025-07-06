@@ -67,7 +67,6 @@
             'table_reservation_on_website/static/src/app/booking_popup'
             '/createBookingPopup.xml',
             'table_reservation_on_website/static/src/scss/style.css',
-            'table_reservation_on_website/static/src/js/table_reservation_notification.js',
         ],
         'web.assets_frontend': [
             'table_reservation_on_website/static/src/js/table_reservation.js',
