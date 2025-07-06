@@ -61,38 +61,6 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-lg-6 o_setting_box">
-                    <div class="o_setting_left_pane">
-                        <field name="pos_interval_hours_bool"/>
-                    </div>
-                    <div class="o_setting_right_pane">
-                        <label for="interval_hours"/>
-                        <div class="text-muted">
-                            Set difference for time slots of restaurant table reservation
-                        </div>
-                    </div>
-                    <div class="o_setting_right_pane" style="display:flex;"
-                         invisible="not pos_interval_hours_bool">
-                        <field name="interval_hours"/>
-                    </div>
-                </div>
-
-                <div class="col-12 col-lg-6 o_setting_box">
-                    <div class="o_setting_left_pane">
-                        <field name="reservation_alert_lead_time_bool"/>
-                    </div>
-                    <div class="o_setting_right_pane">
-                        <label for="reservation_alert_lead_time"/>
-                        <div class="text-muted">
-                            Reservation Alert Lead Time (hours)
-                        </div>
-                    </div>
-                    <div class="o_setting_right_pane" style="display:flex;"
-                         invisible="not reservation_alert_lead_time_bool">
-                        <field name="reservation_alert_lead_time"/>
-                    </div>
-                </div>
-
             </xpath>
         </field>
     </record>
