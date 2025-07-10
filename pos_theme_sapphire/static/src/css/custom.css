@@ -553,6 +553,7 @@
   font-size: 40px !important;
   font-weight: bolder !important;
   color: #007bff !important;
+  display: none !important;
 }
 .pos .leftpane .pads .subpads .numpad .fw-bolder {
   font-size: 25px !important;
