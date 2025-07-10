@@ -166,7 +166,7 @@
 }
 
 .pos .product-list {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
 }
 
 .pos .product-img {
@@ -502,4 +502,70 @@
     min-width:0px !important;
 }*/
 
+/* Fix: Show full product name on multiple lines */
+.pos .rightpane .product-name {
+    font-size: 20px !important;
+    font-weight: bolder !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    text-align: center;
+    padding: 8px 6px 4px;
+    display: block !important;
+    line-height: 1.4em;
+    max-height: none !important;
+    color: #333;
+    word-break: break-word;
+}
 
+.pos .rightpane .product-name span {
+    display: block !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    max-height: none !important;
+    -webkit-line-clamp: unset !important;
+    -webkit-box-orient: unset !important;
+    color: inherit;
+    font-size: inherit;
+}
+
+.pos .leftpane .product-name .text-wrap{
+  font-size: 20px !important;
+}
+
+.pos .leftpane .product-price{
+  font-size: 30px !important;
+  font-weight: bolder !important;
+}
+
+.pos .leftpane .order-summary {
+  font-size: 30px !important;
+  font-weight: bolder !important;
+}
+
+.pos .leftpane .subentry {
+  font-size: 20px !important;
+  font-weight: bolder !important;
+}
+
+.pos .rightpane .price-tag {
+  font-size: 40px !important;
+  font-weight: bolder !important;
+  color: #007bff !important;
+}
+.pos .leftpane .pads .subpads .numpad .fw-bolder {
+  font-size: 25px !important;
+}
+.pos .leftpane .control-button {
+  flex: 1 1 29%;
+  padding: 8px;
+  font-size: 40px !important;
+}
+.pos .leftpane .pads .pay-order-button {
+  height: 56px;
+  font-size: 40px !important;
+}
+.pos .leftpane .pads .set-partner {
+  font-size: 30px !important;
+}
